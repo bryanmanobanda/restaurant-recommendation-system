@@ -1,0 +1,4 @@
+const Turista = {
+    nombre: '',
+    correo: ''
+};

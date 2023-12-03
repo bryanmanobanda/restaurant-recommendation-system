@@ -1,0 +1,69 @@
+form{
+  display: flex;
+  flex-direction: column;
+  margin: 5%;
+}
+
+.header{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  margin-bottom: 10px;
+  }
+
+h1{
+  font-size: 21px;
+  margin: 0;
+  flex: 1;
+}
+
+.cuisine-block{
+  font-size: 22px;
+}
+
+.cuisine {
+  display: flex;
+  flex-wrap: wrap;
+}
+.cuisine > button {
+  margin: 5px;
+}
+
+.cuisine > button:hover {
+  margin: 5px;
+  background-color: aqua;
+}
+
+.cuisine > button::-moz-selection {
+  margin: 5px;
+  background-color: red;
+}
+
+.submit{
+  margin-top: 30px;
+  //width: ;
+  background-color: steelblue;
+}
+
+@media (max-width: 768px) {
+  .cuisine {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .cuisine button {
+    flex-basis: 45%;
+    margin: 5px;
+  }
+
+}
+
+
+button.hovered {
+  background-color: lightgray; /* Cambia el color cuando el ratón pasa por encima */
+}
+
+button.selected {
+  background-color: yellow; /* Cambia el color cuando el botón está seleccionado */
+}

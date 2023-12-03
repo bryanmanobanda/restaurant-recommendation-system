@@ -1,0 +1,49 @@
+<form [formGroup]="filterForm " (ngSubmit)="buscar()">
+  <div class="header">
+    <button mat-icon-button class="close">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <h1>Filtros</h1>
+  </div>
+
+  <mat-form-field>
+    <mat-label>Clasificación</mat-label>
+    <mat-select formControlName="rating">
+      <mat-option value="one">Una estrella</mat-option>
+      <mat-option value="two">Dos estrellas</mat-option>
+      <mat-option value="three">Tres estrella</mat-option>
+      <mat-option value="four">Cuatro estrellas</mat-option>
+      <mat-option value="five">Cinco estrella</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Nivel de precio</mat-label>
+    <mat-select formControlName="price_level">
+      <mat-option value="one">Cualquier precio</mat-option>
+      <mat-option value="two">Gratuito</mat-option>
+      <mat-option value="three">No caro</mat-option>
+      <mat-option value="four">Moderado</mat-option>
+      <mat-option value="five">Caro</mat-option>
+      <mat-option value="six">Muy Caro</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="cuisine-block">
+    <h3>Cocina</h3>
+    <div class="cuisine">
+      <button type="button" mat-stroked-button 
+            (click)="toggleCuisine('Mexicana')" 
+            [ngClass]="{ 'selected': isSelected('Mexicana'), 'hovered': isHovered !== '' && isHovered === 'Mexicana' }">
+      Mexicana
+    </button>
+      <button type="button" mat-stroked-button>Mexicana</button>
+      <button type="button" mat-stroked-button>Italiana</button>
+      <button type="button" mat-stroked-button>Vegetariana</button>
+      <button type="button" mat-stroked-button>Argentina</button>
+      <button type="button" mat-stroked-button>Vegetariana</button>
+      <button type="button" mat-stroked-button>Argentina</button>
+    </div>
+  </div>
+  <button type="submit" class="submit" mat-stroked-button>Buscar</button>
+</form>
