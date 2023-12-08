@@ -22,27 +22,8 @@ h1{
   font-size: 22px;
 }
 
-.cuisine {
-  display: flex;
-  flex-wrap: wrap;
-}
-.cuisine > button {
-  margin: 5px;
-}
-
-.cuisine > button:hover {
-  margin: 5px;
-  background-color: aqua;
-}
-
-.cuisine > button::-moz-selection {
-  margin: 5px;
-  background-color: red;
-}
-
 .submit{
   margin-top: 30px;
-  //width: ;
   background-color: steelblue;
 }
 
@@ -56,14 +37,4 @@ h1{
     flex-basis: 45%;
     margin: 5px;
   }
-
-}
-
-
-button.hovered {
-  background-color: lightgray; /* Cambia el color cuando el ratón pasa por encima */
-}
-
-button.selected {
-  background-color: yellow; /* Cambia el color cuando el botón está seleccionado */
 }

@@ -1,9 +1,9 @@
-<form [formGroup]="filterForm " (ngSubmit)="buscar()">
+<form [formGroup]="filterForm" (ngSubmit)="buscar()">
   <div class="header">
-    <button mat-icon-button class="close">
+    <!--button mat-icon-button class="close">
       <mat-icon>arrow_back</mat-icon>
-    </button>
-    <h1>Filtros</h1>
+    </button-->
+    <h1>Preferencias</h1>
   </div>
 
   <mat-form-field>
@@ -30,20 +30,12 @@
   </mat-form-field>
 
   <div class="cuisine-block">
-    <h3>Cocina</h3>
-    <div class="cuisine">
-      <button type="button" mat-stroked-button 
-            (click)="toggleCuisine('Mexicana')" 
-            [ngClass]="{ 'selected': isSelected('Mexicana'), 'hovered': isHovered !== '' && isHovered === 'Mexicana' }">
-      Mexicana
-    </button>
-      <button type="button" mat-stroked-button>Mexicana</button>
-      <button type="button" mat-stroked-button>Italiana</button>
-      <button type="button" mat-stroked-button>Vegetariana</button>
-      <button type="button" mat-stroked-button>Argentina</button>
-      <button type="button" mat-stroked-button>Vegetariana</button>
-      <button type="button" mat-stroked-button>Argentina</button>
-    </div>
+    <h3>Tipo de cocina</h3>
+    <mat-chip-listbox multiple="true">
+      <mat-chip-option (click)="toggleCuisine('Mexicana')">Mexicana</mat-chip-option>
+      <mat-chip-option (click)="toggleCuisine('Italiana')">Italiana</mat-chip-option>
+      <mat-chip-option (click)="toggleCuisine('Ecuatoriana')">Ecuatoriana</mat-chip-option>
+    </mat-chip-listbox> 
   </div>
   <button type="submit" class="submit" mat-stroked-button>Buscar</button>
 </form>
