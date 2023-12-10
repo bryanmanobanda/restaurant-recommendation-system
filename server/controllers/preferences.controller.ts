@@ -1,27 +1,22 @@
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-import firestore from '../firebase'
+import {firestore} from '../firebase'
 import { Request, Response } from 'express'
+import {Preferencias} from "../models/preferences.interface";
 
-export const getPreferences = async (req: Request, res: Response) => {
-  res.json({
-    status: 'Restaurantes enviados'
-  })
-
-  const querySnapshot = await firestore.collection('turist').get()
-  const turistas = querySnapshot.docs.map((doc: { id: any, data: () => any }) => ({
-    id: doc.id,
-    ...doc.data()
-  }))
-
-  console.log('Respuesta recibida', req.body, turistas)
-}
-
-export const updatePreferences = async (req: Request, res: Response) => {
+export const postPreferences = async (req: Request, res: Response) => {
   try {
-    await firestore.collection('turist').doc(req.params.id).update(req.body)
-    res.json({ status: 'Preferences updated' })
+    console.log(req.body)
+    const nuevaPreferencia: Preferencias = req.body;
+    nuevaPreferencia.turistaUid = ''
+
+    const preferencesRef = firestore.collection('preferencias');
+
+    const docRef = await preferencesRef.add(nuevaPreferencia);
+
+    await docRef.update({ uid: docRef.id });
+
+    res.status(201).json({ message: 'Preferencias almacenadas con éxito', docId: docRef.id });
   } catch (error) {
-    console.error('Error al actualizar preferencias:', error)
-    res.status(500).json({ error: 'Error al actualizar preferencias' })
+    console.error('Error al guardar preferencias:', error);
+    res.status(500).json({ error: 'Error al guardar preferencias' });
   }
 }

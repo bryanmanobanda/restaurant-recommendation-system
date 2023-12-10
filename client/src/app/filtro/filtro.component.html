@@ -8,7 +8,7 @@
 
   <mat-form-field>
     <mat-label>Clasificación</mat-label>
-    <mat-select formControlName="rating">
+    <mat-select formControlName="rating" id="rating">
       <mat-option value="one">Una estrella</mat-option>
       <mat-option value="two">Dos estrellas</mat-option>
       <mat-option value="three">Tres estrella</mat-option>
@@ -19,7 +19,7 @@
 
   <mat-form-field>
     <mat-label>Nivel de precio</mat-label>
-    <mat-select formControlName="price_level">
+    <mat-select formControlName="price_level" id="price_level" Ngmodule>
       <mat-option value="one">Cualquier precio</mat-option>
       <mat-option value="two">Gratuito</mat-option>
       <mat-option value="three">No caro</mat-option>
@@ -31,11 +31,11 @@
 
   <div class="cuisine-block">
     <h3>Tipo de cocina</h3>
-    <mat-chip-listbox multiple="true">
+    <mat-chip-listbox multiple="true" id="cuisine" >
       <mat-chip-option (click)="toggleCuisine('Mexicana')">Mexicana</mat-chip-option>
       <mat-chip-option (click)="toggleCuisine('Italiana')">Italiana</mat-chip-option>
       <mat-chip-option (click)="toggleCuisine('Ecuatoriana')">Ecuatoriana</mat-chip-option>
-    </mat-chip-listbox> 
+    </mat-chip-listbox>
   </div>
-  <button type="submit" class="submit" mat-stroked-button>Buscar</button>
+  <button type="submit" class="submit" id="buscar" mat-stroked-button>Buscar</button>
 </form>

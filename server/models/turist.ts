@@ -1,4 +1,0 @@
-const Turista = {
-    nombre: '',
-    correo: ''
-};

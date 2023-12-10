@@ -10,6 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./filtro.component.scss']
 })
 export class FiltroComponent implements OnInit{
+  cuisineNg: string;
   filterForm: FormGroup;
   selected: { [id: number]: boolean } = {};
   selectedCuisines: string[] = [];
@@ -22,7 +23,7 @@ export class FiltroComponent implements OnInit{
       price_level: [''],
     })
   }
-  
+
   toggleCuisine(cuisine: string) {
     const index = this.selectedCuisines.indexOf(cuisine);
     if (index === -1) {
@@ -30,27 +31,23 @@ export class FiltroComponent implements OnInit{
     } else {
       this.selectedCuisines.splice(index, 1);
     }
-    console.log(this.selectedCuisines)
   }
 
   buscar() {
     const formData = {
-      rating: this.filterForm.value.rating,
-      price_level: this.filterForm.value.price_level,
-      cuisines: this.selectedCuisines
+      servicio: this.filterForm.value.rating,
+      nivelPrecio: this.filterForm.value.price_level,
+      cocina: this.selectedCuisines
     };
     console.log(formData)
-    this.router.navigate(['/recomendaciones'])
-    //navigate(['/otra-vista']);
-    /*this.fs.enviarDatosAlBackend(formData).subscribe(
+    this.fs.enviarDatosAlBackend(formData).subscribe(
       (response) => {
         console.log('Datos enviados correctamente al backend', response);
+        this.router.navigate(['/recomendaciones']);
       },
       (error) => {
         console.error('Error al enviar datos al backend', error);
       }
-    );*/
+    );
   }
-
-
 }

@@ -1,0 +1,26 @@
+<form [formGroup]="registroForm" (ngSubmit)="enviarFormulario()">
+  <h1>Registro</h1>
+  <mat-form-field appearance="fill" >
+    <mat-label>Nombre</mat-label>
+    <input matInput formControlName="nombre" id="nombre" [(ngModel)]="nombreNg">
+    <mat-error *ngIf="f.nombre.invalid && (f.nombre.dirty || f.nombre.touched)">
+      <mat-hint align="start" *ngIf="f.nombre.errors?.['required'] && !f.nombre.errors?.['minlength'] || f.nombre.errors?.['pattern']">Nombre requerido debe contener solo letras y espacios. .</mat-hint>
+      <mat-hint align="end" *ngIf="f.nombre.errors?.['minlength'] || f.nombre.errors?.['maxlength']">Nombre debe tener entre 4 y 50 caracteres.</mat-hint>
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Correo</mat-label>
+    <input matInput formControlName="correo" id="correo" [(ngModel)]="correoNg">
+    <mat-error *ngIf="f.correo.invalid && (f.correo.dirty || f.correo.touched)">
+      <mat-hint *ngIf="f.correo.errors?.['required']">Correo es requerido.</mat-hint>
+      <mat-hint *ngIf="f.correo.errors?.['email']">Correo no válido.</mat-hint>
+    </mat-error>
+  </mat-form-field>
+
+  <button class="registro" mat-raised-button color="primary" type="submit" id="submitButton">Enviar</button>
+  <!--button mat-raised-button color="warn" type="button" (click)="cancelarRegistro()">Cancelar</button-->
+</form>
+
+<p *ngIf="mensajeError" id="errorMessage">{{ mensajeError }}</p>
+<p *ngIf="mensajeConfirmacion" id="confirmationMessage">{{ mensajeConfirmacion }}</p>

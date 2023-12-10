@@ -18,10 +18,11 @@ import {MatChipsModule} from '@angular/material/chips';
 import { HttpClientModule } from '@angular/common/http';
 import { RestauranteModule } from './restaurante/restaurante.module';
 import { PaginaPrincipalComponent } from './pagina-principal/pagina-principal.component';
+import { RegistroComponent } from './registro/registro.component';
 
 
 @NgModule({
-  declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent],
+  declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent, RegistroComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,

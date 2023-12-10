@@ -12,7 +12,6 @@ export class FilterService {
   constructor(private http: HttpClient) {}
 
   enviarDatosAlBackend(data: any): Observable<any> {
-    // Envía los datos al backend usando HttpClient (reemplaza 'post' por el método HTTP que corresponda)
     return this.http.post<any>(`${this.apiUrl}/api/places`, data);
   }
 }

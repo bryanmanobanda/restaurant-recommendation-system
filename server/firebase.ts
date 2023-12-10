@@ -1,13 +1,13 @@
 require("dotenv").config()
-
-const {initializeApp, applicationDefault} = require("firebase-admin/app");
-
-const {getFirestore} = require("firebase-admin/firestore");
+import * as admin from 'firebase-admin';
+import {initializeApp, applicationDefault} from "firebase-admin/app";
+import {getFirestore} from "firebase-admin/firestore";
 
 initializeApp({
     credential: applicationDefault()
 })
 
 const firestore = getFirestore()
+const auth = admin.auth();
 
-export default firestore
+export { firestore, auth };
