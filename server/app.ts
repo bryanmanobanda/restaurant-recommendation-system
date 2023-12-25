@@ -1,8 +1,9 @@
 import express, { Application } from 'express'
-import routerPlaces from './routes/place.routes'
+import routerPlaces from './routes/restaurant.routes'
 import routerSecurity from './routes/security.routes'
 import morgan from 'morgan'
 import cors from 'cors'
+import routerPreferences from "./routes/preferences.routes";
 
 class App {
   public app: Application
@@ -14,7 +15,7 @@ class App {
   }
 
   private config (): void {
-    const whitelist = ['http://localhost:4200', 'http://localhost:9876']
+    const whitelist = ['http://localhost:4200']
 
     const corsOptions = {
       origin: function (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) {
@@ -33,7 +34,8 @@ class App {
   }
 
   private routes (): void {
-    this.app.use(routerPlaces)
+    this.app.use('/api', routerPlaces)
+    this.app.use(routerPreferences)
     this.app.use(routerSecurity)
   }
 }

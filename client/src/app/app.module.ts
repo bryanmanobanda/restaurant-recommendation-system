@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -19,7 +19,11 @@ import { HttpClientModule } from '@angular/common/http';
 import { RestauranteModule } from './restaurante/restaurante.module';
 import { PaginaPrincipalComponent } from './pagina-principal/pagina-principal.component';
 import { RegistroComponent } from './registro/registro.component';
+import {UbicationService} from "./services/ubication.service";
 
+export function iniciarApp(ubicacionService: UbicationService) {
+  return () => ubicacionService.obtenerUbicacion();
+}
 
 @NgModule({
   declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent, RegistroComponent],
@@ -38,7 +42,14 @@ import { RegistroComponent } from './registro/registro.component';
     MatCardModule,
     MatChipsModule,
   ],
-  providers: [],
+  providers: [
+      UbicationService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: iniciarApp,
+      deps: [UbicationService],
+      multi: true
+    }],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

@@ -2,13 +2,40 @@
   padding: 0px;
 }
 
-.mat-mdc-card-subtitle{
-  color: #003F5C;
+.star-icon{
+  color: #d3b023;
 }
 
 .number-comments{
+  font-size: 13px;
+}
+
+.rating-comments{
   display: flex;
   align-items: center;
-  float: inline-end;
-  font-size: 20px;
+}
+
+button{
+  border: 1px solid #68686d
+}
+
+.walk{
+font-size: 24px;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 37px;
+}
+
+.website{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-size: 15px;
+}
+
+.website > mat-icon{
+  display: flex;
+  align-items: center;
+  font-size: 15px;
 }

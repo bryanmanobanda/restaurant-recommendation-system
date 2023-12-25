@@ -5,19 +5,29 @@ import { RestaurantePanelComponent } from './restaurante-panel/restaurante-panel
 import {MatCardModule} from '@angular/material/card';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
+import {MatTabsModule} from '@angular/material/tabs';
+import {MatTableModule} from '@angular/material/table';
+import {MatListModule} from '@angular/material/list';
+
+import { RestauranteInformationComponent } from './restaurante-information/restaurante-information.component';
+
 
 
 
 @NgModule({
   declarations: [
     RestauranteCardComponent,
-    RestaurantePanelComponent
+    RestaurantePanelComponent,
+    RestauranteInformationComponent
   ],
   imports: [
     CommonModule,
     MatCardModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
+    MatTabsModule,
+    MatTableModule,
+    MatListModule
   ],
    exports: [
     RestauranteCardComponent,
