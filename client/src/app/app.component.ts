@@ -1,6 +1,4 @@
-import { Component } from '@angular/core';
-import {ActivatedRoute, ActivationEnd, NavigationEnd, Router} from "@angular/router";
-import {filter} from "rxjs";
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +7,6 @@ import {filter} from "rxjs";
 })
 export class AppComponent {
   title = 'client';
-
   /*constructor(private securityService: SecurityService, private router: Router,) {}
   ngOnInit(){
     if (navigator.geolocation) {

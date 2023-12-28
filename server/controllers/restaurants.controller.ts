@@ -2,6 +2,8 @@ import {Request, Response} from "express";
 import RestaurantService from "../services/restaurant.services";
 import Restaurant from "../models/restaurant.interface";
 import RecommendationServices from "../services/recommendation.services";
+import InformationService from "../services/information.service";
+import RoutesService from "../services/routes.service";
 
 export const getRestaurants = async (req: Request, res: Response) => {
     try {
@@ -14,37 +16,43 @@ export const getRestaurants = async (req: Request, res: Response) => {
         }
         const restaurants = await RestaurantService.buscarRestaurantesCercanos(location);
 
-        res.status(200).json({ restaurants });
+        res.status(200).json({restaurants});
     } catch (error) {
-        res.status(500).json({ error: 'Error al obtener los restaurantes' });
+        res.status(500).json({error: 'Error al obtener los restaurantes'});
     }
 }
 
-export const getInformation = async (req: Request, res: Response) => {
+export const postInformation = async (req: Request, res: Response) => {
     try {
+        const id = req.body.id;
+        const information = await InformationService.buscarInformacionRestaurante(id);
+        res.status(200).json({information});
 
-        const locationParams = req.params.location.split(',');
-
-        let location = {
-            latitude: parseFloat(locationParams[0]),
-            longitude: parseFloat(locationParams[1])
-        }
-        const restaurants = await RestaurantService.buscarRestaurantesCercanos(location);
-
-        res.status(200).json({ restaurants });
     } catch (error) {
-        res.status(500).json({ error: 'Error al obtener los restaurantes' });
+        res.status(500).json({error: 'Error al obtener informacion del restaurante'});
+    }
+}
+
+export const postRoutes = async (req: Request, res: Response) => {
+    try {
+        const origin = {"location": req.body.location}
+        const destination = {"placeId": req.body.placeId}
+        const route = await RoutesService.getRouteRestaurant(origin, destination);
+        res.status(200).json({route});
+
+    } catch (error) {
+        res.status(500).json({error: 'Error al obtener ruta del restaurante'});
     }
 }
 
 export const getRecommendations = async (req: Request, res: Response) => {
     try {
 
-    /*    const locationParams = req.params.location.split(',');
+        /*    const locationParams = req.params.location.split(',');
 
-        let location = {
-            latitude: parseFloat(locationParams[0]),
-            longitude: parseFloat(locationParams[1])*/
+            let location = {
+                latitude: parseFloat(locationParams[0]),
+                longitude: parseFloat(locationParams[1])*/
         //}
         //const restaurants = await RestaurantService.buscarRestaurantesCercanos(location);*/
         // Ejemplo de uso
@@ -69,8 +77,8 @@ export const getRecommendations = async (req: Request, res: Response) => {
                     longitude: -74.0060
                 },
                 photos: [
-                    { name: 'foto1.jpg' },
-                    { name: 'foto2.jpg' }
+                    {name: 'foto1.jpg'},
+                    {name: 'foto2.jpg'}
                 ],
                 cuisine: ['italiana', 'pasta', 'pizza']
             },
@@ -88,8 +96,8 @@ export const getRecommendations = async (req: Request, res: Response) => {
                     longitude: -118.2437
                 },
                 photos: [
-                    { name: 'foto3.jpg' },
-                    { name: 'foto4.jpg' }
+                    {name: 'foto3.jpg'},
+                    {name: 'foto4.jpg'}
                 ],
                 cuisine: ['mexicana', 'tacos', 'enchiladas']
             },
@@ -107,8 +115,8 @@ export const getRecommendations = async (req: Request, res: Response) => {
                     longitude: -118.2437
                 },
                 photos: [
-                    { name: 'foto3.jpg' },
-                    { name: 'foto4.jpg' }
+                    {name: 'foto3.jpg'},
+                    {name: 'foto4.jpg'}
                 ],
                 cuisine: ['ecuatoriana']
             }
@@ -118,8 +126,8 @@ export const getRecommendations = async (req: Request, res: Response) => {
         const recommendedRestaurants = RecommendationServices.recommendRestaurants(userQuery, restaurants, numRecommendations);
         console.log("Recomendaciones:", recommendedRestaurants.map(restaurant => restaurant.id));
 
-        res.status(200).json({message: "Estoy viendo que sirve" });
+        res.status(200).json({message: "Estoy viendo que sirve"});
     } catch (error) {
-        res.status(500).json({ error: 'Error al obtener los restaurantes' });
+        res.status(500).json({error: 'Error al obtener los restaurantes'});
     }
 }

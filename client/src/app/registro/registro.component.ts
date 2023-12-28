@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {SecurityService} from "../services/security.service";
 import {Turista} from "../../Modelo/turista.interface";
 
@@ -8,7 +8,7 @@ import {Turista} from "../../Modelo/turista.interface";
   templateUrl: './registro.component.html',
   styleUrls: ['./registro.component.scss']
 })
-export class RegistroComponent implements OnInit, OnDestroy{
+export class RegistroComponent implements OnInit, OnDestroy {
   turista: Turista
   registroForm: FormGroup;
   nombreNg: string;
@@ -17,7 +17,8 @@ export class RegistroComponent implements OnInit, OnDestroy{
   mensajeConfirmacion: string = '';
   mensajeError: string = '';
 
-  constructor(private fb: FormBuilder, private ss: SecurityService) {}
+  constructor(private fb: FormBuilder, private ss: SecurityService) {
+  }
 
   ngOnInit(): void {
     this.registroForm = this.fb.group({
@@ -27,7 +28,7 @@ export class RegistroComponent implements OnInit, OnDestroy{
   }
 
   ngOnDestroy(): void {
-    if(this.registro != null)
+    if (this.registro != null)
       this.registro.unsubscribe();
     this.mensajeError = '';
     this.mensajeConfirmacion = '';
@@ -41,19 +42,19 @@ export class RegistroComponent implements OnInit, OnDestroy{
   enviarFormulario(): void {
     if (this.registroForm.valid) {
       this.registro = this.ss.registrarUsuario(this.registroForm.value)
-          .subscribe(
-              (response) => {
-                if (response.status === 201 && !response.message.includes('Correo')) {
-                  this.turista = response.turista;
-                  this.mensajeConfirmacion = response.message;
-                } else{
-                  this.mensajeError = response.message;
-                }
-              },
-              (error) => {
-                this.mensajeError = 'Error al registrarse';
-              }
-          );
+        .subscribe(
+          (response) => {
+            if (response.status === 201 && !response.message.includes('Correo')) {
+              this.turista = response.turista;
+              this.mensajeConfirmacion = response.message;
+            } else {
+              this.mensajeError = response.message;
+            }
+          },
+          (error) => {
+            this.mensajeError = 'Error al registrarse';
+          }
+        );
     } else {
       this.mensajeError = 'Los datos ingresados son inválidos.';
     }

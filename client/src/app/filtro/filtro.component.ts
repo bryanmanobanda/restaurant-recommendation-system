@@ -1,23 +1,23 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import { FilterService } from '../services/filter.service';
-import { MatChipsModule } from '@angular/material/chips';
-import { Router } from '@angular/router';
+import {FormBuilder, FormGroup} from "@angular/forms";
+import {RestaurantService} from '../services/restaurant.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-filtro',
   templateUrl: './filtro.component.html',
   styleUrls: ['./filtro.component.scss']
 })
-export class FiltroComponent implements OnInit{
+export class FiltroComponent implements OnInit {
   cuisineNg: string;
   filterForm: FormGroup;
   selected: { [id: number]: boolean } = {};
   selectedCuisines: string[] = [];
 
-  constructor(private fb: FormBuilder, private fs: FilterService, private router:Router){}
+  constructor(private fb: FormBuilder, private fs: RestaurantService, private router: Router) {
+  }
 
-  ngOnInit(){
+  ngOnInit() {
     this.filterForm = this.fb.group({
       rating: [''],
       price_level: [''],

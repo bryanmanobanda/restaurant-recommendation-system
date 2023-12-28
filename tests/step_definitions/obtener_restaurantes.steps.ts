@@ -1,4 +1,4 @@
-import { loadFeature, defineFeature } from "jest-cucumber";
+import {defineFeature, loadFeature} from "jest-cucumber";
 import request from "supertest";
 import app from "../../server/app";
 
@@ -7,9 +7,9 @@ const feature = loadFeature("./tests/features/obtener_restaurantes.feature");
 defineFeature(feature, test => {
 
     let response: request.Response;
-    let location= ""
+    let location = ""
 
-    test('Obtener restaurantes cerca de una ubicación', ({ given, when, and, then }) => {
+    test('Obtener restaurantes cerca de una ubicación', ({given, when, and, then}) => {
         given(/^que se tiene la (.*) del turista$/, (arg0) => {
             location = arg0
         });
@@ -21,13 +21,13 @@ defineFeature(feature, test => {
 
         then('se muestran restaurantes abiertos', () => {
             expect(response.status).toBe(200);
-            response.body.restaurants.forEach((restaurante:any) => {
+            response.body.restaurants.forEach((restaurante: any) => {
                 expect(restaurante.openNow).toBe(true);
             });
         });
 
         and(/^dentro de un radio de (\d+)km de su ubicación$/, (arg0) => {
-            response.body.restaurants.forEach((restaurante:any) => {
+            response.body.restaurants.forEach((restaurante: any) => {
                 const distanciaRestaurante = calcularDistancia(location, restaurante.location);
                 expect(distanciaRestaurante).toBeLessThanOrEqual(5);
             });

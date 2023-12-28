@@ -1,17 +1,17 @@
 import dotenv from 'dotenv';
-dotenv.config();
-
 import Restaurant from '../models/restaurant.interface';
 import axios from "axios";
 
+dotenv.config();
+
 export default class RestaurantService {
-    static async buscarRestaurantesCercanos(location:any): Promise<Restaurant[]> {
+    static async buscarRestaurantesCercanos(location: any): Promise<Restaurant[]> {
 
         const apiUrl = 'https://places.googleapis.com/v1/places:searchNearby/';
         const apiKey = process.env.GOOGLE_API_KEY;
 
         const requestBody = {
-            includedTypes: ['restaurant'],
+            includedPrimaryTypes: ['restaurant'],
             maxResultCount: 2,
             locationRestriction: {
                 circle: {
@@ -31,7 +31,7 @@ export default class RestaurantService {
         };
 
         try {
-            const response = await axios.post(apiUrl, requestBody, { headers });
+            const response = await axios.post(apiUrl, requestBody, {headers});
 
             const restaurants: Restaurant[] = response.data.places.map((result: any) => ({
                 id: result.id,
@@ -46,7 +46,7 @@ export default class RestaurantService {
                     latitude: result.location.latitude || undefined,
                     longitude: result.location.longitude || undefined,
                 },
-                photos: result.photos?.map((photo: any) => ({ name: photo.name })) || [],
+                photos: result.photos?.map((photo: any) => ({name: photo.name})) || [],
             })).filter((restaurant: Restaurant) => restaurant.openNow);
             return restaurants;
         } catch (error) {

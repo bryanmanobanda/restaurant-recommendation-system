@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { MapaComponent } from './mapa.component';
+import {MapaComponent} from './mapa.component';
 
 describe('MapaComponent', () => {
   let component: MapaComponent;

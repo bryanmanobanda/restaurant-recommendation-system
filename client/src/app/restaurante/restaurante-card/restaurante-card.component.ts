@@ -1,14 +1,51 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import Restaurant from "../../../Modelo/restaurante.interface";
 import {environment} from "../../../environment/environment";
+import {RestaurantService} from "../../services/restaurant.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-restaurante-card',
   templateUrl: './restaurante-card.component.html',
   styleUrls: ['./restaurante-card.component.scss']
 })
-export class RestauranteCardComponent{
+export class RestauranteCardComponent implements OnDestroy {
   @Input() restaurante: Restaurant | undefined;
+  @Input() ubication: any;
+  @Input() isSelected = false;
+  @Output() restauranteClicked: EventEmitter<any> = new EventEmitter<any>();
+  enviarRutaSubscription: Subscription | undefined;
+
+  isHovered = false;
+
+  constructor(private restaurant: RestaurantService) {
+  }
+
+  ngOnDestroy() {
+    if (this.enviarRutaSubscription) {
+      this.enviarRutaSubscription.unsubscribe()
+    }
+  }
+
+  onCardClick(): void {
+    this.restauranteClicked.emit(this.restaurante);
+  }
+
+  mostrarRuta(id: any): void {
+    this.enviarRutaSubscription = this.restaurant.obtenerRutaRestaurante(id, this.ubication)
+      .subscribe({
+        next: (data) => {
+          this.restaurant.enviarRuta(data.route);
+        },
+        error: (error) => console.error(error),
+        complete: () => console.info('complete')
+      });
+  }
+
+  highlightCard(isHighlighted: boolean): void {
+    this.isHovered = isHighlighted;
+  }
+
   getStarIcons(numeroEstrellas: number): string[] {
     const entero = Math.floor(numeroEstrellas);
     const decimal = numeroEstrellas - entero;

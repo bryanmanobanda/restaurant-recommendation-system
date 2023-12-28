@@ -13,8 +13,8 @@ interface Restaurant {
     websiteUri: string;
     openNow: boolean;
     location: Location;
-    photos: {name: string;}[];
-    cuisine: string[];
+    photos: { name: string; }[];
+    cuisine: string[]; //agregar telefono y primary type
 }
 
 export default Restaurant;

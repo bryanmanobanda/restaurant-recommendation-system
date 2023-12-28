@@ -1,43 +1,119 @@
-import {Component, OnInit} from '@angular/core';
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-}
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import Restaurant from "../../../Modelo/restaurante.interface";
+import {RestaurantService} from "../../services/restaurant.service";
+import {Subscription} from "rxjs";
+import {environment} from "../../../environment/environment";
+import Information from "../../../Modelo/informacion.interface";
+import {UbicationService} from "../../services/ubication.service";
 
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079},
-  {position: 2, name: 'Helium', weight: 4.0026},
-  {position: 3, name: 'Lithium', weight: 6.941},
-  {position: 4, name: 'Beryllium', weight: 9.0122},
-  {position: 5, name: 'Boron', weight: 10.811},
-  {position: 6, name: 'Carbon', weight: 12.0107},
-  {position: 7, name: 'Nitrogen', weight: 14.00},
-  {position: 8, name: 'Oxygen', weight: 15.9994}
-];
 @Component({
   selector: 'app-restaurante-information',
   templateUrl: './restaurante-information.component.html',
   styleUrls: ['./restaurante-information.component.scss']
 })
-export class RestauranteInformationComponent implements OnInit{
-  displayedColumns: string[] = ['position', 'name', 'weight'];
-  dataSource = ELEMENT_DATA;
+export class RestauranteInformationComponent implements OnInit, OnDestroy {
+  restaurant_Information: Subscription | undefined;
+  restaurant_selected: Subscription | undefined;
+  enviarRutaSubscription: Subscription | undefined;
+  restaurante: Restaurant | null = null;
+  informacion: Information;
+  displayedColumns = ['day', 'hours'];
+  dataSource = [{day: "", hours: ""}];
 
-  slides: any[] = new Array(3).fill({id: -1, src: '', title: '', subtitle: ''});
-
-  constructor() { }
+  constructor(private restaurant: RestaurantService, private ubication: UbicationService) {
+  }
 
   ngOnInit(): void {
-    this.slides[0] = {
-      src: './assets/img/angular.jpg',
-    };
-    this.slides[1] = {
-      src: './assets/img/react.jpg',
+    this.restaurant_selected = this.restaurant.getSelectedRestaurant().subscribe((restaurante: Restaurant | null) => {
+      this.restaurante = restaurante;
+      if (this.restaurante) {
+        this.restaurant_Information = this.restaurant.obtenerInformacionRestaurantes(this.restaurante?.id)
+          .subscribe((information) => {
+            this.informacion = information.information;
+            this.dataSource = this.informacion.weekdayDescriptions.map(description => ({
+              day: this.getDescriptionDay(description),
+              hours: this.getDescriptionHours(description)
+            }));
+          });
+      }
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.restaurant_Information) {
+      this.restaurant_Information.unsubscribe();
     }
-    this.slides[2] = {
-      src: './assets/img/vue.jpg',
+
+    if (this.restaurant_selected) {
+      this.restaurant_selected.unsubscribe();
+    }
+
+    if (this.enviarRutaSubscription) {
+      this.enviarRutaSubscription.unsubscribe();
     }
   }
 
+  mostrarRuta(id: any): void {
+    this.enviarRutaSubscription = this.restaurant.obtenerRutaRestaurante(id, this.ubication.pos)
+      .subscribe({
+        next: (data) => {
+          this.restaurant.enviarRuta(data.route);
+        },
+        error: (error) => console.error(error),
+        complete: () => console.info('complete')
+      });
+  }
+
+  getStarIcons(numeroEstrellas: number): string[] {
+    const entero = Math.floor(numeroEstrellas);
+    const decimal = numeroEstrellas - entero;
+    let icons: string[] = [];
+
+    for (let i = 0; i < entero; i++) {
+      icons.push('star');
+    }
+
+    if (decimal > 0 && decimal < 0.75) {
+      icons.push('star_half');
+    }
+
+    if (decimal >= 0.75) {
+      icons.push('star');
+    }
+
+    while (icons.length < 5) {
+      icons.push('star_border');
+    }
+
+    return icons;
+  }
+
+  getPriceLevelDescription(priceLevel: string | undefined): string | undefined {
+    switch (priceLevel) {
+      case 'PRICE_LEVEL_FREE':
+        return 'Gratis';
+      case 'PRICE_LEVEL_INEXPENSIVE':
+        return 'Económico';
+      case 'PRICE_LEVEL_MODERATE':
+        return 'Moderado';
+      case 'PRICE_LEVEL_EXPENSIVE':
+        return 'Costoso';
+      case 'PRICE_LEVEL_VERY_EXPENSIVE':
+        return 'Muy costoso';
+      default:
+        return undefined;
+    }
+  }
+
+  getDescriptionDay(description: string): string {
+    const splitDescription = description.split(': ');
+    return splitDescription[0];
+  }
+
+  getDescriptionHours(description: string): string {
+    const splitDescription = description.split(': ');
+    return splitDescription[1];
+  }
+
+  protected readonly environment = environment;
 }

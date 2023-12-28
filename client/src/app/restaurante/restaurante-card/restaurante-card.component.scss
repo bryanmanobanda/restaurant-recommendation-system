@@ -1,41 +1,67 @@
-.information > mat-card-content{
-  padding: 0px;
+$title-size: 15px;
+
+.information > mat-card-content {
+  padding: 0;
 }
 
-.star-icon{
+.mat-mdc-card-title {
+  font-size: $title-size;
+}
+
+.mat-mdc-card-subtitle {
+  font-weight: normal;
+}
+
+.star-icon {
   color: #d3b023;
+  font-size: 21px;
 }
 
-.number-comments{
-  font-size: 13px;
-}
-
-.rating-comments{
+.rating-comments {
   display: flex;
   align-items: center;
 }
 
-button{
+.card {
+  border-bottom: 1px solid #68686d
+}
+
+button {
   border: 1px solid #68686d
 }
 
-.walk{
-font-size: 24px;
-display: flex;
-justify-content: center;
-align-items: center;
-height: 37px;
+.walk {
+  font-size: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 37px;
 }
 
-.website{
+.website {
   display: flex;
   flex-direction: row;
   align-items: center;
   font-size: 15px;
 }
 
-.website > mat-icon{
+.website > mat-icon {
   display: flex;
   align-items: center;
   font-size: 15px;
+}
+
+.website > a {
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 1px solid;
+}
+
+.card:hover {
+  background-color: #EAECF1;
+  cursor: pointer;
+}
+
+.card.clicked {
+  background-color: #C6CCE2;
 }

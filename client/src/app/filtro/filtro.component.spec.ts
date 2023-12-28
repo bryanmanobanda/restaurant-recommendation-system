@@ -1,7 +1,7 @@
 import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing';
 
-import { FiltroComponent } from './filtro.component';
-import {FilterService} from "../services/filter.service";
+import {FiltroComponent} from './filtro.component';
+import {RestaurantService} from "../services/restaurant.service";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
@@ -44,18 +44,18 @@ fdescribe('FiltroComponent', () => {
   let filtroComponent: FiltroComponent;
   let fixture: ComponentFixture<FiltroComponent>;
 
-  let filterService: FilterService;
+  let filterService: RestaurantService;
   let router: Router;
   let page: Page;
 
-  beforeEach(async() => {
+  beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [FiltroComponent],
-      imports: [ReactiveFormsModule, MatChipsModule,MatSelectModule, RouterTestingModule.withRoutes([]) ,HttpClientModule, BrowserAnimationsModule, MatFormFieldModule, FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule,],
+      imports: [ReactiveFormsModule, MatChipsModule, MatSelectModule, RouterTestingModule.withRoutes([]), HttpClientModule, BrowserAnimationsModule, MatFormFieldModule, FormsModule, MatButtonModule, MatFormFieldModule, MatInputModule,],
     }).compileComponents();
     fixture = TestBed.createComponent(FiltroComponent);
     filtroComponent = fixture.componentInstance;
-    filterService = TestBed.inject(FilterService)
+    filterService = TestBed.inject(RestaurantService)
     router = TestBed.inject(Router);
     page = new Page(fixture);
     fixture.detectChanges();

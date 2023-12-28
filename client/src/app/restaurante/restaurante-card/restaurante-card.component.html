@@ -1,4 +1,7 @@
-<mat-card>
+<mat-card class="card" [class.clicked]="isSelected"
+          (click)="onCardClick()"
+          (mouseover)="highlightCard(true)"
+          (mouseout)="highlightCard(false)">
   <mat-card-header>
     <mat-card-title-group>
       <mat-card-title *ngIf="restaurante?.displayName">{{restaurante?.displayName}}</mat-card-title>
@@ -7,7 +10,7 @@
           <ng-container *ngFor="let icon of getStarIcons(restaurante?.rating||0)">
             <mat-icon class="star-icon">{{ icon }}</mat-icon>
           </ng-container>
-          <div class="number-comments" *ngIf="restaurante?.userRatingCount">({{restaurante?.userRatingCount}})</div>
+          <div *ngIf="restaurante?.userRatingCount">{{restaurante?.rating}} - ({{restaurante?.userRatingCount}})</div>
         </div>
         <div class="information">
           <mat-card-content *ngIf="restaurante?.priceLevel"><strong>Precio: </strong>
@@ -27,9 +30,9 @@
     </mat-card-title-group>
   </mat-card-header>
   <mat-card-actions align="end">
-    <button mat-button>
+    <button mat-button (click)="mostrarRuta(restaurante?.id)">
       <mat-icon class="walk"> directions_run</mat-icon>
-      RUTA
+      Mostar Ruta
     </button>
   </mat-card-actions>
 </mat-card>

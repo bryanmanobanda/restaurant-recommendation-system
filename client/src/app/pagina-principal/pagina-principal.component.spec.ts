@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { PaginaPrincipalComponent } from './pagina-principal.component';
+import {PaginaPrincipalComponent} from './pagina-principal.component';
 
 describe('PaginaPrincipalComponent', () => {
   let component: PaginaPrincipalComponent;

@@ -1,6 +1,14 @@
 <div class="container">
-    <button class="filter-button" mat-raised-button><mat-icon>star</mat-icon>Filtros</button>
-    <div class="scrollable-content">
-        <app-restaurante-card *ngFor="let restaurante of listaRestaurantes" [restaurante]="restaurante"></app-restaurante-card>
-    </div>
+  <button class="filter-button" mat-raised-button>
+    <mat-icon>star</mat-icon>
+    Filtros
+  </button>
+  <div class="scrollable-content">
+    <app-restaurante-card *ngFor="let restaurante of listaRestaurantes"
+                          [restaurante]="restaurante"
+                          [ubication]="pos"
+                          [isSelected]="selectedRestaurant === restaurante"
+                          (restauranteClicked)="onRestauranteClicked(restaurante)">
+    </app-restaurante-card>
+  </div>
 </div>

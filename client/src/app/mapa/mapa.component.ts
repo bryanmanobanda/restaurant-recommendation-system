@@ -1,7 +1,9 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
 import {environment} from 'src/environment/environment';
 import {UbicationService} from "../services/ubication.service";
-import {FilterService} from "../services/filter.service";
+import {RestaurantService} from "../services/restaurant.service";
+import Routes from "../../Modelo/ruta.interface";
+import {Subscription} from "rxjs";
 
 declare var google: any;
 
@@ -10,7 +12,7 @@ declare var google: any;
   templateUrl: './mapa.component.html',
   styleUrls: ['./mapa.component.scss'],
 })
-export class MapaComponent implements AfterViewInit {
+export class MapaComponent implements AfterViewInit, OnDestroy {
   @ViewChild('mapContainer', {static: false}) mapContainer!: ElementRef;
 
   hide = [
@@ -26,19 +28,46 @@ export class MapaComponent implements AfterViewInit {
     },]
 
   map: any;
+  rutaPolyline: any;
+  ruta: Routes;
+  infoWindow: any;
+  markers: any;
+  listaRestaurantesSubscription: Subscription | undefined;
+  recibirRutaSubscription: Subscription | undefined;
+  enviarRutaSubscription: Subscription | undefined;
 
-  constructor(private ubication: UbicationService, private filter: FilterService) {
+  constructor(private ubication: UbicationService, private filter: RestaurantService) {
   }
 
   ngAfterViewInit(): void {
     (window as any).initMap = () => this.initMap();
 
     this.loadMap();
-    this.filter.obtenerListaRestaurantesObservable().subscribe(listaRestaurantes => {
+
+    this.listaRestaurantesSubscription = this.filter.obtenerListaRestaurantesObservable().subscribe(listaRestaurantes => {
       if (this.map && listaRestaurantes.length > 0) {
         this.updateMarkers(listaRestaurantes);
       }
     });
+
+    this.recibirRutaSubscription = this.filter.recibirRuta().subscribe((data) => {
+      this.ruta = data
+      this.drawRoutes();
+    });
+  }
+
+  ngOnDestroy() {
+    if (this.listaRestaurantesSubscription) {
+      this.listaRestaurantesSubscription.unsubscribe();
+    }
+
+    if (this.recibirRutaSubscription) {
+      this.recibirRutaSubscription.unsubscribe();
+    }
+
+    if (this.enviarRutaSubscription) {
+      this.enviarRutaSubscription.unsubscribe();
+    }
   }
 
   loadMap() {
@@ -49,7 +78,7 @@ export class MapaComponent implements AfterViewInit {
     document.body.appendChild(script);
   }
 
-  initMap(): void {
+  initMap() {
     const mapOptions = {
       center: this.ubication.pos,
       zoom: 18,
@@ -64,7 +93,8 @@ export class MapaComponent implements AfterViewInit {
       mapOptions
     );
 
-    new google.maps.Marker({
+
+    const myLocationMarker = new google.maps.Marker({
       position: this.ubication.pos,
       map: this.map,
     });
@@ -77,25 +107,93 @@ export class MapaComponent implements AfterViewInit {
       this.map.panTo(circleBounds.getCenter());
     });
 
-    /*const infoWindow = new google.maps.InfoWindow();
-    infoWindow.setPosition(this.pos);
-    //infoWindow.setContent('Mi ubicación');
-    infoWindow.open(this.map);*/
-    //this.map.setCenter(this.ubication.pos);
-    //this.updateMarkers();
+    const infoWindowMyLocation = new google.maps.InfoWindow({content: "Mi ubicación"});
+    myLocationMarker.addListener('click', () => {
+      infoWindowMyLocation.open(this.map, myLocationMarker);
+    });
   }
 
-  updateMarkers(listaRestaurantes: any[]): void {
+  updateMarkers(listaRestaurantes: any[]) {
     listaRestaurantes.forEach(restaurante => {
-      new google.maps.Marker({
+
+      const marker = new google.maps.Marker({
         position: {lat: parseFloat(restaurante.location.latitude), lng: parseFloat(restaurante.location.longitude)},
         map: this.map,
         title: restaurante.displayName,
         icon: {
-          url: 'https://maps.google.com/mapfiles/ms/icons/orange-dot.png'
+          url: 'assets/restaurant_pin.png',
+          scaledSize: new google.maps.Size(35, 50)
         }
       });
+
+      if (this.markers) {
+        this.markers.close()
+      }
+
+      this.markers = new google.maps.InfoWindow({
+        content: restaurante.displayName
+      });
+
+      marker.addListener('click', () => {
+        this.markers.open(this.map, marker);
+        this.enviarRutaSubscription = this.filter.obtenerRutaRestaurante(restaurante.id, this.ubication.pos)
+          .subscribe({
+            next: (data) => {
+              this.filter.enviarRuta(data.route);
+            },
+            error: (error) => console.error(error),
+            complete: () => console.info('complete')
+          });
+      });
     });
+  }
+
+  drawRoutes(): void {
+    if (this.map && this.ruta) {
+      if (this.rutaPolyline) {
+        this.rutaPolyline.setMap(null);
+      }
+
+      const decodedPath = google.maps.geometry.encoding.decodePath(this.ruta.polyline);
+      const rutaPolyline = this.rutaPolyline = new google.maps.Polyline({
+        path: decodedPath,
+        geodesic: true,
+        strokeColor: '#0B48A5',
+        strokeOpacity: 1.0,
+        strokeWeight: 3,
+        map: this.map
+      });
+
+      const distanciaEnKilometros = this.ruta.distanceMeters >= 1000 ? (this.ruta.distanceMeters / 1000).toFixed(2) + ' km' : this.ruta.distanceMeters + ' metros';
+      const tiempoEnTexto = this.formatDuration(this.ruta.duration);
+
+      const halfIndex = Math.floor(decodedPath.length / 2);
+      const middlePosition = decodedPath[halfIndex];
+
+      const infoWindowContent = `
+      <div style="font-size: 12px;">
+        <h3>Información de ruta a pie</h3>
+        <p><strong>Distancia:</strong> ${distanciaEnKilometros}</p>
+        <p><strong>Tiempo de llegada:</strong> ${tiempoEnTexto}</p>
+      </div>
+    `;
+
+      if (this.infoWindow) {
+        this.infoWindow.close();
+      }
+
+      this.infoWindow = new google.maps.InfoWindow({
+        content: infoWindowContent
+      })
+
+      this.infoWindow.setPosition(middlePosition);
+      this.infoWindow.open(this.map);
+
+      rutaPolyline.addListener('click', () => {
+        this.infoWindow.setPosition(middlePosition);
+        this.infoWindow.open(this.map);
+      });
+    }
   }
 
   circleMap() {
@@ -113,21 +211,30 @@ export class MapaComponent implements AfterViewInit {
     });
   }
 
-  handleLocationError(
-    browserHasGeolocation: boolean,
-    error?: GeolocationPositionError
-  ): void {
-    let errorMessage = '';
-    if (browserHasGeolocation) {
-      errorMessage = 'Error: The Geolocation service failed.';
-    } else {
-      errorMessage = "Error: Your browser doesn't support geolocation.";
+  formatDuration(duration: string): string {
+    const tiempo = parseInt(this.extractMinutesFromDuration(duration));
+    if (!isNaN(tiempo)) {
+      if (tiempo >= 3600) {
+        const horas = Math.floor(tiempo / 3600);
+        const minutos = Math.floor((tiempo % 3600) / 60);
+        return `${horas} horas ${minutos} minutos`;
+      } else if (tiempo >= 60) {
+        const minutos = Math.floor(tiempo / 60);
+        const segundos = tiempo % 60;
+        return `${minutos} minutos ${segundos} segundos`;
+      } else {
+        return `${tiempo} segundos`;
+      }
     }
+    return duration;
+  }
 
-    if (error) {
-      errorMessage += ` Message: ${error.message}`;
+  extractMinutesFromDuration(duration: string): string {
+    const pattern = /\d+/;
+    const matches = duration.match(pattern);
+    if (matches && matches.length > 0) {
+      return matches[0];
     }
-
-    console.error(errorMessage);
+    return '0';
   }
 }

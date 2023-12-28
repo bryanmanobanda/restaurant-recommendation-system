@@ -1,28 +1,28 @@
-form{
+form {
   display: flex;
   flex-direction: column;
   margin: 5%;
 }
 
-.header{
+.header {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   align-items: center;
   margin-bottom: 10px;
-  }
+}
 
-h1{
+h1 {
   font-size: 21px;
   margin: 0;
   flex: 1;
 }
 
-.cuisine-block{
+.cuisine-block {
   font-size: 22px;
 }
 
-.submit{
+.submit {
   margin-top: 30px;
   background-color: steelblue;
 }

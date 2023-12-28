@@ -4,11 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start": "ts-node server/index.ts",
     "dev": "nodemon server/index.ts",
-    "test": "jest",
-    "test:angular": "cd client/ && ng test",
-    "test:cucumber": "jest",
-    "test:all": "npm run test:cucumber && npm run test:angular"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
