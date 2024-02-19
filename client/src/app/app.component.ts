@@ -1,12 +1,24 @@
-import {Component} from '@angular/core';
-
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {environment} from "../environment/environment";
+declare var google: any;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit{
+  @ViewChild('mapContainer', {static: false}) mapContainer!: ElementRef;
+
   title = 'client';
+
+  loadMap() {
+    const script = document.createElement('script');
+    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.GOOGLE_API}&callback=initMap`;
+    script.async = true;
+    script.defer = true;
+    document.body.appendChild(script);
+  }
+  initMap() {}
   /*constructor(private securityService: SecurityService, private router: Router,) {}
   ngOnInit(){
     if (navigator.geolocation) {
@@ -45,4 +57,10 @@ export class AppComponent {
 
     console.error(errorMessage);
   }*/
+  protected readonly environment = environment;
+
+  ngOnInit(): void {
+    (window as any).initMap = () => this.initMap();
+    this.loadMap()
+  }
 }

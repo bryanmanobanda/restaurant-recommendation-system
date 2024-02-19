@@ -6,6 +6,7 @@ interface Location {
 interface Restaurant {
     id: string;
     displayName: string;
+    primaryCuisine: string;
     shortFormattedAddress: string;
     priceLevel: string;
     rating: number;
@@ -14,7 +15,7 @@ interface Restaurant {
     openNow: boolean;
     location: Location;
     photos: { name: string; }[];
-    cuisine: string[]; //agregar telefono y primary type
+    phone: string;
 }
 
 export default Restaurant;

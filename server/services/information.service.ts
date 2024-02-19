@@ -11,14 +11,13 @@ export default class InformationService {
         const headers = {
             'Content-Type': 'application/json',
             'X-Goog-Api-Key': apiKey,
-            'X-Goog-FieldMask': 'currentOpeningHours.weekdayDescriptions,takeout,curbsidePickup,delivery,dineIn,reservable,outdoorSeating,goodForChildren,goodForGroups,goodForWatchingSports,liveMusic,paymentOptions,accessibilityOptions,types'
+            'X-Goog-FieldMask': 'currentOpeningHours.weekdayDescriptions,takeout,curbsidePickup,delivery,dineIn,reservable,outdoorSeating,goodForChildren,goodForGroups,goodForWatchingSports,liveMusic,paymentOptions,accessibilityOptions'
         };
 
         try {
             const response = await axios.get(apiUrl, {headers});
             return {
                 id: id,
-                types: response.data.types || [],
                 weekdayDescriptions: response.data.currentOpeningHours.weekdayDescriptions || [],
                 paymentOptions: {
                     acceptsCreditCards: response.data.paymentOptions.acceptsCreditCards || false,

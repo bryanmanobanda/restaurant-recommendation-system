@@ -15,20 +15,27 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatCardModule} from '@angular/material/card';
 import {MatChipsModule} from '@angular/material/chips';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatTooltipModule} from '@angular/material/tooltip';
+
 
 
 import {HttpClientModule} from '@angular/common/http';
 import {RestauranteModule} from './restaurante/restaurante.module';
 import {PaginaPrincipalComponent} from './pagina-principal/pagina-principal.component';
-import {RegistroComponent} from './registro/registro.component';
+import {AccesoComponent} from './acceso/acceso.component';
 import {UbicationService} from "./services/ubication.service";
+import {environment} from "../environment/environment";
+import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
+import {getAuth, provideAuth} from "@angular/fire/auth";
+import {AngularFireModule} from "@angular/fire/compat";
 
 export function iniciarApp(ubicacionService: UbicationService) {
   return () => ubicacionService.obtenerUbicacion();
 }
 
 @NgModule({
-  declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent, RegistroComponent],
+  declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent, AccesoComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -43,7 +50,10 @@ export function iniciarApp(ubicacionService: UbicationService) {
     RestauranteModule,
     MatCardModule,
     MatChipsModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatMenuModule,
+    MatTooltipModule,
+    AngularFireModule.initializeApp(environment.FIREBASE),
   ],
   providers: [
     UbicationService,

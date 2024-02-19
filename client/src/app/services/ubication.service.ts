@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {Turista} from "../../Modelo/turista.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,6 @@ export class UbicationService {
     lat: 0,
     lng: 0,
   };
-
   async obtenerUbicacion(): Promise<any> {
     return new Promise<void>((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(

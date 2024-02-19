@@ -1,6 +1,23 @@
-<div class="flex-container">
-  <!--app-restaurante-panel class="flex-items"></app-restaurante-panel-->
-  <app-filtro class="flex-items"></app-filtro>
-  <!--router-outlet name="secundario"></router-outlet-->
+<div class="flex-container" *ngIf="user">
+  <div class="flex-items">
+    <router-outlet  ></router-outlet>
+  </div>
   <app-mapa class="flex-items"></app-mapa>
 </div>
+<router-outlet name="information"></router-outlet>
+  <button mat-mini-fab *ngIf="user?.correo" color="primary" [matMenuTriggerFor]="menu" matTooltip="{{user.nombre}}" matTooltipPosition="left"  aria-label="Boton con icono de perfil">
+    <mat-icon *ngIf="!user?.foto">person</mat-icon>
+    <img class="foto-perfil" *ngIf="user?.foto" src="{{user.foto}}" alt="">
+  </button>
+  <mat-menu #menu="matMenu">
+    <mat-card>
+      <mat-card-header>
+        <mat-card-subtitle *ngIf="user?.correo">{{user.correo}}</mat-card-subtitle>
+        <mat-card-title *ngIf="user?.nombre">{{user.nombre}}</mat-card-title>
+      </mat-card-header>
+    </mat-card>
+    <button mat-menu-item (click)="logOut()">
+      <mat-icon>input</mat-icon>
+      <span>Cerrar Sesión</span>
+    </button>
+  </mat-menu>

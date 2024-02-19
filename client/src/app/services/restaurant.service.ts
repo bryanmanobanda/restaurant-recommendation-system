@@ -25,9 +25,10 @@ export class RestaurantService {
     return this.http.post<any>(`${environment.BASE_URL}/preferences`, data);
   }
 
-  obtenerRestaurantes(location: any): Observable<any> {
-    const coordinatesString: string = `${location.lat},${location.lng}`;
-    return this.http.get<any>(`${environment.BASE_URL}/api/restaurants/${coordinatesString}`);
+  obtenerRestaurantes(location: any, uid: String | undefined): Observable<any> {
+    const data = {uid, location}
+    console.log(data)
+    return this.http.post<any>(`${environment.BASE_URL}/api/restaurants`, data);
   }
 
   obtenerInformacionRestaurantes(id_Restaurante: any): Observable<any> {
@@ -60,6 +61,32 @@ export class RestaurantService {
 
   obtenerListaRestaurantesObservable(): Observable<Restaurant[]> {
     return this.listaRestaurantesSubject.asObservable();
+  }
+
+  aplicarFiltros(preferencias: any): void {
+    // Aplica los filtros de cocina
+    if (preferencias.cocina && preferencias.cocina.length > 0) {
+      this.listaRestaurantes = this.listaRestaurantes.filter(restaurant => {
+        return preferencias.cocina.includes(restaurant.primaryCuisine);
+      });
+    }
+
+    // Aplica el filtro de precio
+    if (preferencias.nivelPrecio) {
+      this.listaRestaurantes = this.listaRestaurantes.filter(restaurant => {
+        return restaurant.priceLevel === preferencias.nivelPrecio;
+      });
+    }
+
+    // Aplica el filtro de rating
+    if (preferencias.servicio) {
+      this.listaRestaurantes = this.listaRestaurantes.filter(restaurant => {
+        return restaurant.rating >= preferencias.servicio;
+      });
+    }
+
+    // Después de aplicar los filtros, emite la lista actualizada
+    this.listaRestaurantesSubject.next(this.listaRestaurantes);
   }
 
   setSelectedRestaurant(restaurant: Restaurant | null): void {

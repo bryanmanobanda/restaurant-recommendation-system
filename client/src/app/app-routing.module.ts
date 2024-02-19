@@ -2,26 +2,45 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {RestaurantePanelComponent} from './restaurante/restaurante-panel/restaurante-panel.component';
 import {FiltroComponent} from './filtro/filtro.component';
-import {RegistroComponent} from "./registro/registro.component";
+import {AccesoComponent} from "./acceso/acceso.component";
 import {RestauranteInformationComponent} from "./restaurante/restaurante-information/restaurante-information.component";
+import {PaginaPrincipalComponent} from "./pagina-principal/pagina-principal.component";
+import {accesoGuard, authGuard} from "./auth.guard";
 
 const routes: Routes = [
   {
-    path: 'filtros',
-    component: FiltroComponent,
+    path: '',
+    redirectTo: '/recomendaciones',
+    pathMatch: "full"
   },
   {
-    path: 'registro',
-    component: RegistroComponent,
+    path: '',
+    component: PaginaPrincipalComponent,
+    canActivateChild:[authGuard],
+    children: [
+      {
+        path: 'filtros',
+        component: FiltroComponent,
+      },
+      {
+        path: 'recomendaciones',
+        component: RestaurantePanelComponent,
+      },
+      {
+        path: 'informacion',
+        component: RestauranteInformationComponent,
+        outlet: 'information',
+      }
+    ]
   },
   {
-    path: 'recomendaciones',
-    component: RestaurantePanelComponent,
+    path: 'acceso',
+    component: AccesoComponent,
+    canActivate: [accesoGuard]
   },
   {
-    path: 'informacion',
-    component: RestauranteInformationComponent,
-    outlet: 'information'
+    path: '**',
+    redirectTo: '/recomendaciones'
   }
 ];
 

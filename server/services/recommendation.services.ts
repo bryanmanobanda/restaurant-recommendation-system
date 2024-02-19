@@ -1,7 +1,7 @@
 import Restaurant from "../models/restaurant.interface";
 
 export default class RecommendationServices {
-
+/*
     static calculateCuisineVector(restaurants: Restaurant[]): Map<string, number[]> {
         const cuisineMap: Map<string, number[]> = new Map();
 
@@ -49,5 +49,5 @@ export default class RecommendationServices {
         // Obtener las mejores recomendaciones
         const recommendations = restaurantSimilarities.slice(0, numRecommendations).map(item => item.restaurant);
         return recommendations;
-    }
+    }*/
 }

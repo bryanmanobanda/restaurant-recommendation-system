@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
-import {environment} from 'src/environment/environment';
 import {UbicationService} from "../services/ubication.service";
 import {RestaurantService} from "../services/restaurant.service";
 import Routes from "../../Modelo/ruta.interface";
@@ -26,12 +25,11 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
       elementType: "labels",
       stylers: [{visibility: "off"}],
     },]
-
   map: any;
   rutaPolyline: any;
   ruta: Routes;
   infoWindow: any;
-  markers: any;
+  markers: any[] = [];
   listaRestaurantesSubscription: Subscription | undefined;
   recibirRutaSubscription: Subscription | undefined;
   enviarRutaSubscription: Subscription | undefined;
@@ -40,12 +38,11 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    (window as any).initMap = () => this.initMap();
-
-    this.loadMap();
+    this.initMap()
 
     this.listaRestaurantesSubscription = this.filter.obtenerListaRestaurantesObservable().subscribe(listaRestaurantes => {
       if (this.map && listaRestaurantes.length > 0) {
+        this.clearMarkers();
         this.updateMarkers(listaRestaurantes);
       }
     });
@@ -68,14 +65,6 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
     if (this.enviarRutaSubscription) {
       this.enviarRutaSubscription.unsubscribe();
     }
-  }
-
-  loadMap() {
-    const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=${environment.GOOGLE_API}&callback=initMap`;
-    script.async = true;
-    script.defer = true;
-    document.body.appendChild(script);
   }
 
   initMap() {
@@ -113,6 +102,13 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
     });
   }
 
+  clearMarkers() {
+    this.markers.forEach(marker => {
+      marker.setMap(null);
+    });
+    this.markers = [];
+  }
+
   updateMarkers(listaRestaurantes: any[]) {
     listaRestaurantes.forEach(restaurante => {
 
@@ -126,16 +122,12 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
         }
       });
 
-      if (this.markers) {
-        this.markers.close()
-      }
-
-      this.markers = new google.maps.InfoWindow({
+      const markersInfoWindow = new google.maps.InfoWindow({
         content: restaurante.displayName
       });
 
       marker.addListener('click', () => {
-        this.markers.open(this.map, marker);
+        markersInfoWindow.open(this.map, marker);
         this.enviarRutaSubscription = this.filter.obtenerRutaRestaurante(restaurante.id, this.ubication.pos)
           .subscribe({
             next: (data) => {
@@ -145,6 +137,8 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
             complete: () => console.info('complete')
           });
       });
+
+      this.markers.push(marker);
     });
   }
 

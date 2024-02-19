@@ -13,6 +13,8 @@
           <div *ngIf="restaurante?.userRatingCount">{{restaurante?.rating}} - ({{restaurante?.userRatingCount}})</div>
         </div>
         <div class="information">
+          <mat-card-content *ngIf="restaurante?.primaryCuisine">
+            <strong>Cocina primaria:</strong> {{restaurante?.primaryCuisine}} </mat-card-content>
           <mat-card-content *ngIf="restaurante?.priceLevel"><strong>Precio: </strong>
             {{ getPriceLevelDescription(restaurante?.priceLevel) }} </mat-card-content>
           <mat-card-content *ngIf="restaurante?.shortFormattedAddress">
@@ -21,7 +23,8 @@
             <mat-icon>language</mat-icon>
             <a href="{{ restaurante?.websiteUri }}" target="_blank">Visitar Website</a>
           </mat-card-content>
-
+          <mat-card-content *ngIf="restaurante?.phone">
+            <strong>Teléfono:</strong> {{restaurante?.phone}} </mat-card-content>
         </div>
       </mat-card-subtitle>
       <img mat-card-md-image

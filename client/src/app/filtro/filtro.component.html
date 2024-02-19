@@ -1,40 +1,29 @@
-<form [formGroup]="filterForm" (ngSubmit)="buscar()">
-  <div class="header">
-    <!--button mat-icon-button class="close">
-      <mat-icon>arrow_back</mat-icon>
-    </button-->
-    <h1>Preferencias</h1>
-  </div>
+<div class="header">
+  <button mat-icon-button class="close" (click)="close()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+  <h1>Preferencias de restaurantes</h1>
+</div>
 
+<form [formGroup]="filterForm" (ngSubmit)="buscar()">
   <mat-form-field>
     <mat-label>Clasificación</mat-label>
     <mat-select formControlName="rating" id="rating">
-      <mat-option value="one">Una estrella</mat-option>
-      <mat-option value="two">Dos estrellas</mat-option>
-      <mat-option value="three">Tres estrella</mat-option>
-      <mat-option value="four">Cuatro estrellas</mat-option>
-      <mat-option value="five">Cinco estrella</mat-option>
+      <mat-option *ngFor="let rate of rating" value="{{rate}}">{{rate}} Estrella</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field>
     <mat-label>Nivel de precio</mat-label>
-    <mat-select formControlName="price_level" id="price_level" Ngmodule>
-      <mat-option value="one">Cualquier precio</mat-option>
-      <mat-option value="two">Gratuito</mat-option>
-      <mat-option value="three">No caro</mat-option>
-      <mat-option value="four">Moderado</mat-option>
-      <mat-option value="five">Caro</mat-option>
-      <mat-option value="six">Muy Caro</mat-option>
+    <mat-select formControlName="price_level" id="price_level">
+      <mat-option *ngFor="let price of price_level" value="{{price}}">{{price}}</mat-option>
     </mat-select>
   </mat-form-field>
 
-  <div class="cuisine-block">
+  <div class="cuisine-block" *ngIf="cocinasPrimarias">
     <h3>Tipo de cocina</h3>
-    <mat-chip-listbox multiple="true" id="cuisine">
-      <mat-chip-option (click)="toggleCuisine('Mexicana')">Mexicana</mat-chip-option>
-      <mat-chip-option (click)="toggleCuisine('Italiana')">Italiana</mat-chip-option>
-      <mat-chip-option (click)="toggleCuisine('Ecuatoriana')">Ecuatoriana</mat-chip-option>
+    <mat-chip-listbox multiple="true" id="cuisine" *ngFor="let cocina of cocinasPrimarias">
+      <mat-chip-option (click)="toggleCuisine(cocina)">{{cocina}}</mat-chip-option>
     </mat-chip-listbox>
   </div>
   <button type="submit" class="submit" id="buscar" mat-stroked-button>Buscar</button>

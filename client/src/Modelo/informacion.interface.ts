@@ -30,7 +30,6 @@ interface AccessibilityOptions {
 
 interface Information {
   id: string;
-  types: [string];
   weekdayDescriptions: [string];
   paymentOptions: PaymentOptions;
   services: Services;

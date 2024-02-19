@@ -4,32 +4,113 @@ import Restaurant from "../models/restaurant.interface";
 import RecommendationServices from "../services/recommendation.services";
 import InformationService from "../services/information.service";
 import RoutesService from "../services/routes.service";
-
-export const getRestaurants = async (req: Request, res: Response) => {
+import {firestore} from "../firebase";
+import {Turista} from "../models/turista.interface";
+/*
+export const postRestaurants = async (req: Request, res: Response) => {
     try {
+        const uid = req.body.uid
+        const location = req.body.location
 
-        const locationParams = req.params.location.split(',');
+        //formula matematica para dividir el cuadrado en 4 partes y hacer una busqueda
+        //probar el algoritmo dibujando en el mapa
+        //gregar un add a la lista de restaurantes
 
-        let location = {
-            latitude: parseFloat(locationParams[0]),
-            longitude: parseFloat(locationParams[1])
+        // Falta que los filtros cambien de acuerdo a lo que se selecciona
+        // Falta mostrar los restaurantes que se realiza la busqueda
+        // Falta que muestre la vista anterior sin hacer la consulta
+        // Falta volver a los restaurantes recomendados sin hacer la consulta.
+        // Falta actualizar en el mapa los restaurantes.
+        const restaurants = await RestaurantService.buscarRestaurantesCercanos(location);
+        // hacer la búsqueda de las preferencias en firestore, cuisines filtrar por los de mayor peso
+        const user = await firestore.collection('turist').doc(uid).get();
+        let user_Profile = user.data()
+        if (user_Profile) {
+            const cocinaMap = user_Profile.cocina || {};
+            const nivelPrecioMap = user_Profile.nivel_precio || {};
+            const calidadServicioMap = user_Profile.calidad_servicio || {};
+
+            const topCocina = obtenerTopClaves(cocinaMap, 3);
+            const topNivelPrecio = obtenerTopClaves(nivelPrecioMap, 3);
+            const topCalidadServicio = obtenerTopClaves(calidadServicioMap, 3);
+
+            user_Profile = {
+                uid: user_Profile.uid,
+                nombre: user_Profile.nombre,
+                correo: user_Profile.correo,
+                foto: "",
+                cocina: topCocina,
+                nivel_precio: topNivelPrecio,
+                calidad_servicio: topCalidadServicio
+            };
         }
+        console.log(user_Profile)
+            res.status(200).json({restaurants, user_Profile});
+        }
+    catch
+        (error)
+        {
+            res.status(500).json({error: 'Problema al buscar restaurantes y perfil de usuario'});
+        }
+    }
+*/
+export const postRestaurants = async (req: Request, res: Response) => {
+    try {
+        const uid = req.body.uid;
+        const location = req.body.location;
+
         const restaurants = await RestaurantService.buscarRestaurantesCercanos(location);
 
-        res.status(200).json({restaurants});
+        const userSnapshot = await firestore.collection('turist').doc(uid).get();
+        const user_Profile = userSnapshot.data() as Turista;
+
+        if (user_Profile) {
+            const cocinaMap = user_Profile.cocina || {};
+            const nivelPrecioMap = user_Profile.nivel_precio || {};
+            const calidadServicioMap = user_Profile.calidad_servicio || {};
+
+            const topCocina = obtenerTopClaves(cocinaMap, 3);
+            const topNivelPrecio = obtenerTopClaves(nivelPrecioMap, 3);
+            const topCalidadServicio = obtenerTopClaves(calidadServicioMap, 3);
+
+            // Convertir los mapas en formato clave-valor
+            const cocina = convertirMapaAClaveValor(topCocina, cocinaMap);
+            const nivelPrecio = convertirMapaAClaveValor(topNivelPrecio, nivelPrecioMap);
+            const calidadServicio = convertirMapaAClaveValor(topCalidadServicio, calidadServicioMap);
+
+            // Construir el perfil de usuario con los datos actualizados
+            const user_ProfileActualizado: Turista = {
+                ...user_Profile,
+                cocina,
+                nivel_precio: nivelPrecio,
+                calidad_servicio: calidadServicio
+            };
+
+            res.status(200).json({ restaurants, user_Profile: user_ProfileActualizado });
+        } else {
+            res.status(404).json({ error: 'Usuario no encontrado' });
+        }
     } catch (error) {
-        res.status(500).json({error: 'Error al obtener los restaurantes'});
+        res.status(500).json({ error: 'Problema al buscar restaurantes y perfil de usuario' });
     }
-}
+};
+
+const convertirMapaAClaveValor = (claves: string[], mapa: any): { [key: string]: number } => {
+    const claveValor: { [key: string]: number } = {};
+    claves.forEach(clave => {
+        claveValor[clave] = mapa[clave] || 0; // Si no hay valor definido, asignar 0
+    });
+    return claveValor;
+};
+
 
 export const postInformation = async (req: Request, res: Response) => {
     try {
         const id = req.body.id;
         const information = await InformationService.buscarInformacionRestaurante(id);
         res.status(200).json({information});
-
     } catch (error) {
-        res.status(500).json({error: 'Error al obtener informacion del restaurante'});
+        res.status(500).json({error: 'Problema al obtener informacion del restaurante'});
     }
 }
 
@@ -39,95 +120,14 @@ export const postRoutes = async (req: Request, res: Response) => {
         const destination = {"placeId": req.body.placeId}
         const route = await RoutesService.getRouteRestaurant(origin, destination);
         res.status(200).json({route});
-
     } catch (error) {
-        res.status(500).json({error: 'Error al obtener ruta del restaurante'});
+        res.status(500).json({error: 'Problema al obtener ruta del restaurante'});
     }
 }
 
-export const getRecommendations = async (req: Request, res: Response) => {
-    try {
-
-        /*    const locationParams = req.params.location.split(',');
-
-            let location = {
-                latitude: parseFloat(locationParams[0]),
-                longitude: parseFloat(locationParams[1])*/
-        //}
-        //const restaurants = await RestaurantService.buscarRestaurantesCercanos(location);*/
-        // Ejemplo de uso
-        const userQuery = {
-            rating: 3,
-            priceLevel: 'moderado',
-            cuisine: ['mexicana', 'coffee']
-        };
-
-        const restaurants: Restaurant[] = [
-            {
-                id: '1',
-                displayName: 'Restaurante Italiano',
-                shortFormattedAddress: 'Calle Principal 123',
-                priceLevel: 'Medio',
-                rating: 4.5,
-                userRatingCount: 120,
-                websiteUri: 'https://www.ejemplo.com',
-                openNow: true,
-                location: {
-                    latitude: 40.7128,
-                    longitude: -74.0060
-                },
-                photos: [
-                    {name: 'foto1.jpg'},
-                    {name: 'foto2.jpg'}
-                ],
-                cuisine: ['italiana', 'pasta', 'pizza']
-            },
-            {
-                id: '2',
-                displayName: 'Restaurante Mexicano',
-                shortFormattedAddress: 'Avenida Principal 456',
-                priceLevel: 'Económico',
-                rating: 4.0,
-                userRatingCount: 90,
-                websiteUri: 'https://www.ejemplo.com/mexicano',
-                openNow: false,
-                location: {
-                    latitude: 34.0522,
-                    longitude: -118.2437
-                },
-                photos: [
-                    {name: 'foto3.jpg'},
-                    {name: 'foto4.jpg'}
-                ],
-                cuisine: ['mexicana', 'tacos', 'enchiladas']
-            },
-            {
-                id: '3',
-                displayName: 'Restaurante Mexicano',
-                shortFormattedAddress: 'Avenida Principal 456',
-                priceLevel: 'Económico',
-                rating: 4.0,
-                userRatingCount: 90,
-                websiteUri: 'https://www.ejemplo.com/mexicano',
-                openNow: false,
-                location: {
-                    latitude: 34.0522,
-                    longitude: -118.2437
-                },
-                photos: [
-                    {name: 'foto3.jpg'},
-                    {name: 'foto4.jpg'}
-                ],
-                cuisine: ['ecuatoriana']
-            }
-            // Agregar más restaurantes si es necesario
-        ];
-        const numRecommendations = 3;
-        const recommendedRestaurants = RecommendationServices.recommendRestaurants(userQuery, restaurants, numRecommendations);
-        console.log("Recomendaciones:", recommendedRestaurants.map(restaurant => restaurant.id));
-
-        res.status(200).json({message: "Estoy viendo que sirve"});
-    } catch (error) {
-        res.status(500).json({error: 'Error al obtener los restaurantes'});
+export const getRecommendations = async (req: Request, res: Response) => {}
+    const obtenerTopClaves = (mapa: any, n: number) => {
+        const claves = Object.keys(mapa);
+        claves.sort((a, b) => mapa[b] - mapa[a]);
+        return claves.slice(0, n);
     }
-}

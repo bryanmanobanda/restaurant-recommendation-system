@@ -11,13 +11,13 @@ export default class RestaurantService {
         const apiKey = process.env.GOOGLE_API_KEY;
 
         const requestBody = {
-            includedPrimaryTypes: ['restaurant'],
-            maxResultCount: 2,
+            includedPrimaryTypes: ['american_restaurant', 'bakery', 'bar', 'barbecue_restaurant', 'brazilian_restaurant', 'breakfast_restaurant', 'brunch_restaurant', 'cafe', 'chinese_restaurant', 'coffee_shop', 'fast_food_restaurant', 'french_restaurant', 'greek_restaurant', 'hamburger_restaurant', 'ice_cream_shop', 'indian_restaurant', 'indonesian_restaurant', 'italian_restaurant', 'japanese_restaurant', 'korean_restaurant', 'lebanese_restaurant', 'meal_delivery', 'meal_takeaway', 'mediterranean_restaurant', 'mexican_restaurant', 'middle_eastern_restaurant', 'pizza_restaurant', 'ramen_restaurant', 'restaurant', 'sandwich_shop', 'seafood_restaurant', 'spanish_restaurant', 'steak_house', 'sushi_restaurant', 'thai_restaurant', 'turkish_restaurant', 'vegan_restaurant', 'vegetarian_restaurant', 'vietnamese_restaurant'],
+            maxResultCount: 20,
             locationRestriction: {
                 circle: {
                     center: {
-                        latitude: location.latitude,
-                        longitude: location.longitude
+                        latitude: location.lat,
+                        longitude: location.lng
                     },
                     radius: 5000.0
                 }
@@ -27,7 +27,7 @@ export default class RestaurantService {
         const headers = {
             'Content-Type': 'application/json',
             'X-Goog-Api-Key': apiKey,
-            'X-Goog-FieldMask': 'places.id,places.displayName.text,places.photos.name,places.shortFormattedAddress,places.currentOpeningHours.openNow,places.priceLevel,places.rating,places.userRatingCount,places.websiteUri,places.location'
+            'X-Goog-FieldMask': 'places.id,places.primaryType,places.displayName.text,places.photos.name,places.shortFormattedAddress,places.currentOpeningHours.openNow,places.priceLevel,places.rating,places.userRatingCount,places.websiteUri,places.location,places.nationalPhoneNumber'
         };
 
         try {
@@ -36,6 +36,7 @@ export default class RestaurantService {
             const restaurants: Restaurant[] = response.data.places.map((result: any) => ({
                 id: result.id,
                 displayName: result.displayName?.text || '',
+                primaryCuisine: result.primaryType || '',
                 shortFormattedAddress: result.shortFormattedAddress || '',
                 openNow: result.currentOpeningHours?.openNow || false,
                 priceLevel: result.priceLevel || '',
@@ -47,7 +48,8 @@ export default class RestaurantService {
                     longitude: result.location.longitude || undefined,
                 },
                 photos: result.photos?.map((photo: any) => ({name: photo.name})) || [],
-            })).filter((restaurant: Restaurant) => restaurant.openNow);
+                phone: result.nationalPhoneNumber?.text || ''
+            }))//.filter((restaurant: Restaurant) => restaurant.openNow);
             return restaurants;
         } catch (error) {
             console.error('Error al buscar restaurantes:', error);
