@@ -18,17 +18,14 @@ import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
 
-
-
 import {HttpClientModule} from '@angular/common/http';
 import {RestauranteModule} from './restaurante/restaurante.module';
 import {PaginaPrincipalComponent} from './pagina-principal/pagina-principal.component';
 import {AccesoComponent} from './acceso/acceso.component';
 import {UbicationService} from "./services/ubication.service";
 import {environment} from "../environment/environment";
-import {initializeApp, provideFirebaseApp} from "@angular/fire/app";
-import {getAuth, provideAuth} from "@angular/fire/auth";
 import {AngularFireModule} from "@angular/fire/compat";
+import { MatTabsModule } from '@angular/material/tabs';
 
 export function iniciarApp(ubicacionService: UbicationService) {
   return () => ubicacionService.obtenerUbicacion();
@@ -50,6 +47,7 @@ export function iniciarApp(ubicacionService: UbicationService) {
     RestauranteModule,
     MatCardModule,
     MatChipsModule,
+    MatTabsModule,
     MatSidenavModule,
     MatMenuModule,
     MatTooltipModule,

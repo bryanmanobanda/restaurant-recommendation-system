@@ -3,7 +3,7 @@ export interface Turista {
   nombre: string|undefined|null;
   correo: string|undefined|null;
   foto: string|undefined|null;
-  cocina: {},
+  cocina: {[key: string]: number},
   calidad_servicio: {},
   nivel_precio: {}
 }

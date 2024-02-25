@@ -1,7 +1,26 @@
 <div class="flex-container" *ngIf="user">
   <div class="flex-items">
-    <router-outlet  ></router-outlet>
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+      <mat-tab label="Restaurantes para ti">
+      <ng-template matTabContent>
+        <app-restaurante-panel></app-restaurante-panel>
+      </ng-template>
+      </mat-tab>
+      <mat-tab label="Restaurantes cerca de ti">
+      <ng-template matTabContent>
+        <app-restaurante-panel-general></app-restaurante-panel-general>
+      </ng-template>
+      </mat-tab>
+      <!--mat-tab label="Para ti">
+        <app-restaurante-panel></app-restaurante-panel>
+        <router-outlet></router-outlet>
+      </mat-tab>
+      <mat-tab label="Cerca de ti">
+        <app-restaurante-panel-general></app-restaurante-panel-general>
+      </mat-tab-->
+    </mat-tab-group>
   </div>
+  <!--div class="flex-items"></div-->
   <app-mapa class="flex-items"></app-mapa>
 </div>
 <router-outlet name="information"></router-outlet>

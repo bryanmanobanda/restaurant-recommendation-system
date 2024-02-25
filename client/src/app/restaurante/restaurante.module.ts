@@ -10,13 +10,15 @@ import {MatTableModule} from '@angular/material/table';
 import {MatListModule} from '@angular/material/list';
 
 import {RestauranteInformationComponent} from './restaurante-information/restaurante-information.component';
+import { RestaurantePanelGeneralComponent } from './restaurante-panel-general/restaurante-panel-general.component';
 
 
 @NgModule({
   declarations: [
     RestauranteCardComponent,
     RestaurantePanelComponent,
-    RestauranteInformationComponent
+    RestauranteInformationComponent,
+    RestaurantePanelGeneralComponent
   ],
   imports: [
     CommonModule,
@@ -30,7 +32,8 @@ import {RestauranteInformationComponent} from './restaurante-information/restaur
   exports: [
     RestauranteCardComponent,
     RestaurantePanelComponent,
-    RestauranteInformationComponent
+    RestauranteInformationComponent,
+    RestaurantePanelGeneralComponent
   ]
 })
 export class RestauranteModule {

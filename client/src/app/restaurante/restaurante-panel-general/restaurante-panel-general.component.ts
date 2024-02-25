@@ -1,19 +1,19 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import Restaurant from "../../../Modelo/restaurante.interface";
+import {Subscription} from "rxjs";
 import {UbicationService} from "../../services/ubication.service";
 import {RestaurantService} from "../../services/restaurant.service";
-import {Subscription} from "rxjs";
 import {Router} from "@angular/router";
-import Restaurant from "../../../Modelo/restaurante.interface";
 import {SecurityService} from "../../services/security.service";
 import {Turista} from "../../../Modelo/turista.interface";
 import {Especialidades} from "../../../enum/especialidades.enum";
 
 @Component({
-  selector: 'app-restaurante-panel',
-  templateUrl: './restaurante-panel.component.html',
-  styleUrls: ['./restaurante-panel.component.scss']
+  selector: 'app-restaurante-panel-general',
+  templateUrl: './restaurante-panel-general.component.html',
+  styleUrls: ['./restaurante-panel-general.component.scss']
 })
-export class RestaurantePanelComponent implements OnInit, OnDestroy {
+export class RestaurantePanelGeneralComponent implements OnInit, OnDestroy {
   listaRestaurantes: any[] = [];
   selectedRestaurant: Restaurant | null;
   listRestaurantsSubscription: Subscription | undefined;
@@ -42,18 +42,18 @@ export class RestaurantePanelComponent implements OnInit, OnDestroy {
   private fetchRestaurantes(): void {
     if(this.listaRestaurantes.length === 0) {
       this.listRestaurantsSubscription = this.filter.obtenerRestaurantes(this.ubication.pos, this.uid)
-        .subscribe(
-          (data) => {
-            console.log(data)
-              this.filter.setTurista(data.user_Profile)
-            this.filter.actualizarListaRestaurantes(data);
-            this.listaRestaurantes = this.filtrarRestaurantesSegunPerfil(
-              this.filter.obtenerListaRestaurantes(),
-              data.user_Profile
-            );
-            this.calculateUniqueCuisines();
-          }
-        );
+          .subscribe(
+              (data) => {
+                console.log(data)
+                this.filter.setTurista(data.user_Profile)
+                this.filter.actualizarListaRestaurantes(data);
+                this.listaRestaurantes = this.filtrarRestaurantesSegunPerfil(
+                    this.filter.obtenerListaRestaurantes(),
+                    data.user_Profile
+                );
+                this.calculateUniqueCuisines();
+              }
+          );
     }else{
       this.listaRestaurantes = this.filtrarRestaurantesSegunPerfil(
           this.filter.obtenerListaRestaurantes(),
@@ -64,12 +64,12 @@ export class RestaurantePanelComponent implements OnInit, OnDestroy {
   }
 
   private filtrarRestaurantesSegunPerfil(
-    restaurantes: Restaurant[],
-    user_Profile: Turista
+      restaurantes: Restaurant[],
+      user_Profile: Turista
   ): Restaurant[] {
     if (!user_Profile) {
       console.log("No se ha cargado el perfil")
-      return restaurantes;
+      return restaurantes; // Si no se ha cargado el perfil, mostrar todos los restaurantes
     }
     const preferencias = user_Profile.cocina;
     if (!preferencias || Object.keys(preferencias).length === 0) {
@@ -80,17 +80,17 @@ export class RestaurantePanelComponent implements OnInit, OnDestroy {
     const preferenciasKeys = Object.keys(preferencias);
     console.log(preferenciasKeys)
     return restaurantes.filter((restaurante) =>
-      preferenciasKeys.includes(restaurante.primaryCuisine)
+        !preferenciasKeys.includes(restaurante.primaryCuisine)
     );
   }
 
   onRestauranteClicked(restaurante: Restaurant | null): void {
     this.filter.getSelectedRestaurant()
-      .subscribe(
-        (data) => {
-          this.selectedRestaurant = data
-        }
-      ).unsubscribe();
+        .subscribe(
+            (data) => {
+              this.selectedRestaurant = data
+            }
+        ).unsubscribe();
 
     if (this.selectedRestaurant === restaurante) {
       this.filter.setSelectedRestaurant(null);
@@ -119,6 +119,7 @@ export class RestaurantePanelComponent implements OnInit, OnDestroy {
       }
     });
 
+    // Ordenar el mapa según el valor de cocina
     const orderedCuisineMap = new Map<string, Restaurant[]>(
         [...cuisineMap.entries()].sort(([cuisineA,], [cuisineB,]) => {
           const pesoA = this.filter.userProfile.cocina[cuisineA];
@@ -127,12 +128,23 @@ export class RestaurantePanelComponent implements OnInit, OnDestroy {
         })
     );
 
+    // Convertir el mapa ordenado en un arreglo de objetos
     this.uniqueCuisines = Array.from(orderedCuisineMap.entries()).map(([cuisine, restaurants]) => {
       return { cuisine, restaurants };
     });
   }
 
   obtenerEspecialidadEnEspanol(especialidad: string): string {
-      return Especialidades[especialidad as keyof typeof Especialidades] || especialidad;
+    //if (Object.values(Especialidades).includes(s)) {
+    return Especialidades[especialidad as keyof typeof Especialidades] || especialidad;
+    //} else {
+    //return especialidad; // Devuelve la misma cadena si no se encuentra en el enum
+    //}
   }
+
+  /* // Convertir el mapa en un arreglo de objetos
+   this.uniqueCuisines = Array.from(cuisineMap.entries()).map(([cuisine, restaurants]) => {
+     return { cuisine, restaurants };
+   });
+ }*/
 }

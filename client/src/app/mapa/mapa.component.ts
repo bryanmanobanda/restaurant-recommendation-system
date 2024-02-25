@@ -6,6 +6,16 @@ import {Subscription} from "rxjs";
 
 declare var google: any;
 
+interface Circle {
+  center: { lat: number, lng: number };
+  radius: number;
+}
+
+interface Point {
+  x: number;
+  y: number;
+}
+
 @Component({
   selector: 'app-mapa',
   templateUrl: './mapa.component.html',
@@ -39,14 +49,14 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initMap()
-
+/*
     this.listaRestaurantesSubscription = this.filter.obtenerListaRestaurantesObservable().subscribe(listaRestaurantes => {
       if (this.map && listaRestaurantes.length > 0) {
         this.clearMarkers();
         this.updateMarkers(listaRestaurantes);
       }
     });
-
+*/
     this.recibirRutaSubscription = this.filter.recibirRuta().subscribe((data) => {
       this.ruta = data
       this.drawRoutes();
@@ -100,6 +110,8 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
     myLocationMarker.addListener('click', () => {
       infoWindowMyLocation.open(this.map, myLocationMarker);
     });
+
+    //this.drawSecondaryCircles()
   }
 
   clearMarkers() {
@@ -110,6 +122,7 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
   }
 
   updateMarkers(listaRestaurantes: any[]) {
+    this.clearMarkers();
     listaRestaurantes.forEach(restaurante => {
 
       const marker = new google.maps.Marker({
@@ -230,5 +243,101 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
       return matches[0];
     }
     return '0';
+  }
+  // Función para dividir el círculo y dibujar los círculos secundarios
+ drawSecondaryCircles(): void {
+  const originalCircle = {
+    center: { lat: this.ubication.pos.lat, lng: this.ubication.pos.lng },
+    radius: 5000
+  };
+
+  this.divideCircle(originalCircle)
+    .then(secondaryCircles => {
+      console.log(secondaryCircles);
+      secondaryCircles.forEach(circle => {
+        this.drawCircle(circle);
+      });
+    })
+    .catch(error => {
+      console.error("Error al dividir el círculo:", error);
+    });
+}
+
+  // Función para dividir el círculo en 4 partes iguales y calcular el radio adecuado para los círculos secundarios
+  async divideCircle(circle: Circle): Promise<Circle[]> {
+    const {spherical} = await google.maps.importLibrary("geometry")
+    const {center, radius} = circle;
+
+    // Calcular los puntos de división en la circunferencia del círculo original
+    const divisionPoints: Point[] = [];
+    for (let i = 0; i < 4; i++) {
+      const angle = (Math.PI / 2) * i;
+      // Calcular las coordenadas de los puntos en la circunferencia del círculo original
+      const pointOnCircle = spherical.computeOffset(center, radius, angle);
+      divisionPoints.push({x: pointOnCircle.lat(), y: pointOnCircle.lng()});
+    }
+
+    // Calcular el radio adecuado para los círculos secundarios
+    const secondaryCircles: Circle[] = [];
+    for (let i = 0; i < 3; i++) {
+      // Calcular la distancia desde el centro del círculo original hasta los puntos de división
+      const distanceToDivisionPoint = Math.sqrt(
+        Math.pow(center.lat - divisionPoints[i].x, 2) +
+        Math.pow(center.lng - divisionPoints[i].y, 2)
+      );
+      // El radio del círculo secundario debe ser la mitad de esta distancia
+      const secondaryRadius = distanceToDivisionPoint / 2;
+      // Calcular el centro del círculo secundario como el punto medio entre los puntos de división
+      const secondaryCenterX = (center.lat + divisionPoints[i].x) / 2;
+      const secondaryCenterY = (center.lng + divisionPoints[i].y) / 2;
+      secondaryCircles.push({
+        center: {lat: secondaryCenterX, lng: secondaryCenterY},
+        radius: secondaryRadius
+      });
+    }
+    // Calcular el centro del último círculo secundario como el punto medio entre el último y el primer punto de división
+    const lastSecondaryCenterX = (center.lat + divisionPoints[3].x) / 2;
+    const lastSecondaryCenterY = (center.lng + divisionPoints[3].y) / 2;
+    const lastDistanceToDivisionPoint = Math.sqrt(
+      Math.pow(center.lat - divisionPoints[3].x, 2) +
+      Math.pow(center.lng - divisionPoints[3].y, 2)
+    );
+    const lastSecondaryRadius = lastDistanceToDivisionPoint / 2;
+    secondaryCircles.push({
+      center: {lat: lastSecondaryCenterX, lng: lastSecondaryCenterY},
+      radius: lastSecondaryRadius
+    });
+
+    return secondaryCircles;
+  }
+
+  // Función para dibujar un círculo en el mapa
+  drawCircle(circle: any): void {
+    new google.maps.Circle({
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.12,
+      map: this.map,
+      center: circle.center,
+      radius: 2500,
+      zindex: 1
+    });
+    this.newdrawCircle(circle)
+  }
+
+  newdrawCircle(circle: any): void {
+    new google.maps.Circle({
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.12,
+      map: this.map,
+      center: this.ubication.pos,
+      radius: circle.radius,
+      zindex: 1
+    });
   }
 }

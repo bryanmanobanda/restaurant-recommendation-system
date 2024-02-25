@@ -81,7 +81,7 @@ export const postRestaurants = async (req: Request, res: Response) => {
             // Construir el perfil de usuario con los datos actualizados
             const user_ProfileActualizado: Turista = {
                 ...user_Profile,
-                cocina,
+                cocina: cocina,
                 nivel_precio: nivelPrecio,
                 calidad_servicio: calidadServicio
             };
@@ -96,7 +96,7 @@ export const postRestaurants = async (req: Request, res: Response) => {
 };
 
 const convertirMapaAClaveValor = (claves: string[], mapa: any): { [key: string]: number } => {
-    const claveValor: { [key: string]: number } = {};
+        const claveValor: { [key: string]: number } = {};
     claves.forEach(clave => {
         claveValor[clave] = mapa[clave] || 0; // Si no hay valor definido, asignar 0
     });
@@ -128,6 +128,6 @@ export const postRoutes = async (req: Request, res: Response) => {
 export const getRecommendations = async (req: Request, res: Response) => {}
     const obtenerTopClaves = (mapa: any, n: number) => {
         const claves = Object.keys(mapa);
-        claves.sort((a, b) => mapa[b] - mapa[a]);
+        claves.sort((a, b) => mapa[b] - mapa[a]); // Ordenar las claves según el valor en el mapa
         return claves.slice(0, n);
     }

@@ -14,7 +14,7 @@
         </div>
         <div class="information">
           <mat-card-content *ngIf="restaurante?.primaryCuisine">
-            <strong>Cocina primaria:</strong> {{restaurante?.primaryCuisine}} </mat-card-content>
+            <strong>Especialidad:</strong> {{restaurante?.primaryCuisine}} </mat-card-content>
           <mat-card-content *ngIf="restaurante?.priceLevel"><strong>Precio: </strong>
             {{ getPriceLevelDescription(restaurante?.priceLevel) }} </mat-card-content>
           <mat-card-content *ngIf="restaurante?.shortFormattedAddress">

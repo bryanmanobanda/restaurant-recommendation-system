@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {environment} from "../../environment/environment";
 import Restaurant from "../../Modelo/restaurante.interface";
 import Routes from "../../Modelo/ruta.interface";
+import {Turista} from "../../Modelo/turista.interface";
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class RestaurantService {
   private listaRestaurantesSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
   private rutaSubject: Subject<Routes> = new Subject<Routes>();
   private selectedRestaurantSubject: BehaviorSubject<Restaurant | null> = new BehaviorSubject<Restaurant | null>(null);
-
+  userProfile: Turista
 
   selectedRestaurant$: Observable<Restaurant | null> = this.selectedRestaurantSubject.asObservable();
 
@@ -103,6 +104,18 @@ export class RestaurantService {
 
   recibirRuta(): Observable<Routes> {
     return this.rutaSubject.asObservable();
+  }
+
+  setTurista(user:any){
+    this.userProfile = {
+      uid: user.uid,
+      nombre: user.nombre,
+      correo: user.correo,
+      nivel_precio: user.nivel_precio,
+      cocina: user.cocina,
+      foto: "",
+      calidad_servicio: user.calidad_servicio,
+    }
   }
 
 }
