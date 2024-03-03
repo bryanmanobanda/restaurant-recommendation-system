@@ -1,20 +1,61 @@
-form {
-  width: 94%;
+.main {
+  background-color: #002D42;
+  width: 100%;
+  height: 100%;
+}
+.container{
   display: flex;
   flex-direction: column;
-  margin: 7px;
+  height: 50%;
+  width: 50%;
+  background-color: #D0D6E0;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 h1 {
-  font-size: 21px;
-  margin: 0;
+  font-size: 30px;
   flex: 1;
+  color: #002D42;
+  font-weight: 500;
+  display: contents;
 }
 
-
-.registro {
+.registro{
   margin-top: 30px;
-  background-color: steelblue;
+  background-color: white;
+  color: black;
+  font-size: 16px;
+  width: 52%;
+}
+
+.align-text-button{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.facebook-icon {
+  width: 24px;
+  height: 24px;
+  background-image: url('https://upload.wikimedia.org/wikipedia/commons/9/91/036-facebook.png');
+  background-size: cover;
+  display: inline-block;
+  margin-right: 5px;
+}
+
+.google-icon {
+  width: 24px;
+  height: 24px;
+  background-image: url('https://fonts.gstatic.com/s/i/productlogos/googleg/v6/24px.svg');
+  background-size: cover;
+  display: inline-block;
+  margin-right: 5px;
 }
 
 @media (max-width: 768px) {

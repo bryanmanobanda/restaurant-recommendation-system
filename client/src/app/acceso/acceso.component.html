@@ -1,6 +1,19 @@
-<h1>Iniciar en aplicación</h1>
-<button class="registro" mat-raised-button color="primary" (click)="sigInwithFacebook()">Iniciar con Facebook</button>
-<button class="registro" mat-raised-button color="primary" (click)="sigInwithGoogle()">Iniciar con Google</button>
+<div class="main">
+  <div class="container">
+    <h1>Acceder a la aplicación</h1>
+    <button class="registro" mat-raised-button (click)="sigInwithFacebook()">
+    <span class="align-text-button">
+      <span class="facebook-icon"></span> Iniciar con Facebook
+    </span>
+    </button>
+    <button class="registro" mat-raised-button (click)="sigInwithGoogle()">
+    <span class="align-text-button">
+    <span class="google-icon"></span> Iniciar con Google
+    </span>
 
+    </button>
+  </div>
+
+</div>
 <!--p *ngIf="mensajeError" id="errorMessage">{{ mensajeError }}</p-->
 <!--p *ngIf="mensajeConfirmacion" id="confirmationMessage">{{ mensajeConfirmacion }}</p-->
