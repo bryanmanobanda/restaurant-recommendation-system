@@ -65,3 +65,32 @@ button {
 .card.clicked {
   background-color: #C6CCE2;
 }
+
+.example-radio-group {
+  display: flex;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.mat-mdc-radio-button .mdc-radio {
+  padding: 0;
+;
+}
+.mdc-form-field>label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mdc-radio__background {
+  width: 14px;
+  height: 14px;
+}
+
+.information-routes{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

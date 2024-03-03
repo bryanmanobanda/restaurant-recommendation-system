@@ -41,16 +41,18 @@ export class RestaurantePanelGeneralComponent implements OnInit, OnDestroy {
 
   private fetchRestaurantes(): void {
     if(this.listaRestaurantes.length === 0) {
-      this.listRestaurantsSubscription = this.filter.obtenerRestaurantes(this.ubication.pos, this.uid)
+      this.listRestaurantsSubscription = this.filter.obtenerRestaurantes(this.ubication.pos, this.uid, 5000)
           .subscribe(
               (data) => {
                 console.log(data)
                 this.filter.setTurista(data.user_Profile)
                 this.filter.actualizarListaRestaurantes(data);
+                this.filter.setListaSecundaria(data.restaurants)
                 this.listaRestaurantes = this.filtrarRestaurantesSegunPerfil(
                     this.filter.obtenerListaRestaurantes(),
                     data.user_Profile
                 );
+
                 this.calculateUniqueCuisines();
               }
           );
@@ -59,6 +61,8 @@ export class RestaurantePanelGeneralComponent implements OnInit, OnDestroy {
           this.filter.obtenerListaRestaurantes(),
           this.filter.userProfile
       );
+      //this.filter.setListaSecundaria(this.listaRestaurantes)
+
       this.calculateUniqueCuisines();
     }
   }
@@ -119,7 +123,6 @@ export class RestaurantePanelGeneralComponent implements OnInit, OnDestroy {
       }
     });
 
-    // Ordenar el mapa según el valor de cocina
     const orderedCuisineMap = new Map<string, Restaurant[]>(
         [...cuisineMap.entries()].sort(([cuisineA,], [cuisineB,]) => {
           const pesoA = this.filter.userProfile.cocina[cuisineA];
@@ -128,23 +131,12 @@ export class RestaurantePanelGeneralComponent implements OnInit, OnDestroy {
         })
     );
 
-    // Convertir el mapa ordenado en un arreglo de objetos
     this.uniqueCuisines = Array.from(orderedCuisineMap.entries()).map(([cuisine, restaurants]) => {
       return { cuisine, restaurants };
     });
   }
 
   obtenerEspecialidadEnEspanol(especialidad: string): string {
-    //if (Object.values(Especialidades).includes(s)) {
     return Especialidades[especialidad as keyof typeof Especialidades] || especialidad;
-    //} else {
-    //return especialidad; // Devuelve la misma cadena si no se encuentra en el enum
-    //}
   }
-
-  /* // Convertir el mapa en un arreglo de objetos
-   this.uniqueCuisines = Array.from(cuisineMap.entries()).map(([cuisine, restaurants]) => {
-     return { cuisine, restaurants };
-   });
- }*/
 }

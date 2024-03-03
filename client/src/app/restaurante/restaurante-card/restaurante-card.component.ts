@@ -15,7 +15,6 @@ export class RestauranteCardComponent implements OnDestroy {
   @Input() isSelected = false;
   @Output() restauranteClicked: EventEmitter<any> = new EventEmitter<any>();
   enviarRutaSubscription: Subscription | undefined;
-
   isHovered = false;
 
   constructor(private restaurant: RestaurantService) {
@@ -31,14 +30,11 @@ export class RestauranteCardComponent implements OnDestroy {
     this.restauranteClicked.emit(this.restaurante);
   }
 
-  mostrarRuta(id: any): void {
-    this.enviarRutaSubscription = this.restaurant.obtenerRutaRestaurante(id, this.ubication)
-      .subscribe({
-        next: (data) => {
+  mostrarRuta(id: any, travel:string): void {
+    this.enviarRutaSubscription = this.restaurant.obtenerRutaRestaurante(id, this.ubication, travel)
+      .subscribe(
+          (data) => {
           this.restaurant.enviarRuta(data.route);
-        },
-        error: (error) => console.error(error),
-        complete: () => console.info('complete')
       });
   }
 

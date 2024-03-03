@@ -5,16 +5,16 @@ import Route from "../models/route.interface";
 dotenv.config();
 
 export default class RoutesService {
-    static async getRouteRestaurant(origin: any, destination: any): Promise<Route> {
+    static async getRouteRestaurant(origin: any, destination: any, travelMode: any): Promise<Route> {
         const apiUrl = "https://routes.googleapis.com/directions/v2:computeRoutes";
         const apiKey = process.env.GOOGLE_API_KEY;
 
         const requestBody = {
             "origin": origin,
             "destination": destination,
-            "travelMode": "WALK",
+            "travelMode": travelMode,
             "computeAlternativeRoutes": false,
-            "transitPreferences": {"routingPreference": "LESS_WALKING"},
+            //"transitPreferences": {"routingPreference": "LESS_WALKING"},
             "routeModifiers": {
                 "avoidTolls": false,
                 "avoidHighways": false,
@@ -37,8 +37,8 @@ export default class RoutesService {
                 distanceMeters: response.data.routes[0].distanceMeters || undefined,
                 duration: response.data.routes[0].duration || "",
                 polyline: response.data.routes[0].polyline.encodedPolyline || "",
+                travel: travelMode || ""
             }
-
         } catch (error) {
             console.error('Error al obtener la ruta del restaurante:', error);
             throw new Error('Error al obtener la ruta del restaurante');

@@ -31,11 +31,16 @@ export class FiltroComponent implements OnInit, OnDestroy {
       rating: [''],
       price_level: [''],
     })
-    this.listaRestaurantes = this.fs.obtenerListaRestaurantes()
+    //this.fs.obtenerListaSecundariaObservable().subscribe(data => {
+    if(this.fs.listaSecundaria){
+      this.listaRestaurantes = this.fs.listaSecundaria
+    }else{
+      this.listaRestaurantes = this.fs.obtenerListaRestaurantes()
+    }
+      this.iniciarFiltros()
+      //this.actualizarFiltros()
+    //})
     console.log(this.listaRestaurantes)
-
-    this.iniciarFiltros()
-this.actualizarFiltros()
   }
 
   iniciarFiltros(){
@@ -115,7 +120,7 @@ this.actualizarFiltros()
     } else {
       this.selectedCuisines.splice(index, 1);
     }
-    this.actualizarValoresPrecioRating();
+    //this.actualizarValoresPrecioRating();
   }
 
   actualizarValoresPrecioRating() {

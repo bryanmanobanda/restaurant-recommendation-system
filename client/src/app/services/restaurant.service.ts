@@ -12,10 +12,12 @@ import {Turista} from "../../Modelo/turista.interface";
 export class RestaurantService {
 
   private listaRestaurantes: Restaurant[] = [];
+  public listaSecundaria: Restaurant[] = [];
   private listaRestaurantesSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
   private rutaSubject: Subject<Routes> = new Subject<Routes>();
   private selectedRestaurantSubject: BehaviorSubject<Restaurant | null> = new BehaviorSubject<Restaurant | null>(null);
   userProfile: Turista
+  public radio="5 km"
 
   selectedRestaurant$: Observable<Restaurant | null> = this.selectedRestaurantSubject.asObservable();
 
@@ -26,8 +28,8 @@ export class RestaurantService {
     return this.http.post<any>(`${environment.BASE_URL}/preferences`, data);
   }
 
-  obtenerRestaurantes(location: any, uid: String | undefined): Observable<any> {
-    const data = {uid, location}
+  obtenerRestaurantes(location: any, uid: String | undefined, radio:number): Observable<any> {
+    const data = {uid, location, radio}
     console.log(data)
     return this.http.post<any>(`${environment.BASE_URL}/api/restaurants`, data);
   }
@@ -37,7 +39,7 @@ export class RestaurantService {
     return this.http.post<any>(`${environment.BASE_URL}/api/information`, id);
   }
 
-  obtenerRutaRestaurante(id: any, ubication: any): Observable<any> {
+  obtenerRutaRestaurante(id: any, ubication: any, travelMode: any): Observable<any> {
     const data = {
       "location": {
         "latLng": {
@@ -45,7 +47,8 @@ export class RestaurantService {
           "longitude": ubication.lng
         }
       },
-      "placeId": id
+      "placeId": id,
+      travelMode
     }
 
     return this.http.post<any>(`${environment.BASE_URL}/api/routes`, data);
@@ -60,11 +63,23 @@ export class RestaurantService {
     this.listaRestaurantesSubject.next(this.listaRestaurantes);
   }
 
+  private listaSecundariaSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
+
+  setListaSecundaria(data: Restaurant[]): void {
+    this.listaSecundaria = data;
+    this.listaSecundariaSubject.next(data);
+  }
+
+  obtenerListaSecundariaObservable(): Observable<Restaurant[]> {
+    return this.listaSecundariaSubject.asObservable();
+  }
+
   obtenerListaRestaurantesObservable(): Observable<Restaurant[]> {
     return this.listaRestaurantesSubject.asObservable();
   }
 
   aplicarFiltros(preferencias: any): void {
+    this.listaSecundariaSubject.next(this.listaRestaurantes);
     // Aplica los filtros de cocina
     if (preferencias.cocina && preferencias.cocina.length > 0) {
       this.listaRestaurantes = this.listaRestaurantes.filter(restaurant => {

@@ -54,7 +54,7 @@ export class RestauranteInformationComponent implements OnInit, OnDestroy {
   }
 
   mostrarRuta(id: any): void {
-    this.enviarRutaSubscription = this.restaurant.obtenerRutaRestaurante(id, this.ubication.pos)
+    this.enviarRutaSubscription = this.restaurant.obtenerRutaRestaurante(id, this.ubication.pos, "")
       .subscribe({
         next: (data) => {
           this.restaurant.enviarRuta(data.route);

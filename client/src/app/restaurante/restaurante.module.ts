@@ -8,9 +8,17 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatTabsModule} from '@angular/material/tabs';
 import {MatTableModule} from '@angular/material/table';
 import {MatListModule} from '@angular/material/list';
+import {FormsModule} from '@angular/forms';
+import {MatRadioModule} from '@angular/material/radio';
+
+
 
 import {RestauranteInformationComponent} from './restaurante-information/restaurante-information.component';
 import { RestaurantePanelGeneralComponent } from './restaurante-panel-general/restaurante-panel-general.component';
+import { PanelRecomendacionesComponent } from './panel-recomendaciones/panel-recomendaciones.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatSliderModule} from "@angular/material/slider";
+import {ReactiveFormsModule} from "@angular/forms";
 
 
 @NgModule({
@@ -18,22 +26,29 @@ import { RestaurantePanelGeneralComponent } from './restaurante-panel-general/re
     RestauranteCardComponent,
     RestaurantePanelComponent,
     RestauranteInformationComponent,
-    RestaurantePanelGeneralComponent
+    RestaurantePanelGeneralComponent,
+    PanelRecomendacionesComponent
   ],
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTabsModule,
-    MatTableModule,
-    MatListModule
-  ],
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTabsModule,
+        MatTableModule,
+        MatListModule,
+        MatExpansionModule,
+        MatSliderModule,
+        ReactiveFormsModule,
+        FormsModule,
+        MatRadioModule
+    ],
   exports: [
     RestauranteCardComponent,
     RestaurantePanelComponent,
     RestauranteInformationComponent,
-    RestaurantePanelGeneralComponent
+    RestaurantePanelGeneralComponent,
+    PanelRecomendacionesComponent
   ]
 })
 export class RestauranteModule {

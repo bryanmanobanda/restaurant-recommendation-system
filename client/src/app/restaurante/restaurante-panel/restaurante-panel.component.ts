@@ -41,7 +41,7 @@ export class RestaurantePanelComponent implements OnInit, OnDestroy {
 
   private fetchRestaurantes(): void {
     if(this.listaRestaurantes.length === 0) {
-      this.listRestaurantsSubscription = this.filter.obtenerRestaurantes(this.ubication.pos, this.uid)
+      this.listRestaurantsSubscription = this.filter.obtenerRestaurantes(this.ubication.pos, this.uid, 5000)
         .subscribe(
           (data) => {
             console.log(data)
@@ -110,7 +110,6 @@ export class RestaurantePanelComponent implements OnInit, OnDestroy {
   calculateUniqueCuisines() {
     const cuisineMap = new Map<string, Restaurant[]>();
 
-    // Agrupar los restaurantes por cuisine
     this.listaRestaurantes.forEach(restaurante => {
       if (cuisineMap.has(restaurante.primaryCuisine)) {
         cuisineMap.get(restaurante.primaryCuisine)?.push(restaurante);

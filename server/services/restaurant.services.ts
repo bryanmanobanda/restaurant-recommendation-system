@@ -5,7 +5,7 @@ import axios from "axios";
 dotenv.config();
 
 export default class RestaurantService {
-    static async buscarRestaurantesCercanos(location: any): Promise<Restaurant[]> {
+    static async buscarRestaurantesCercanos(location: any, radio:any): Promise<Restaurant[]> {
 
         const apiUrl = 'https://places.googleapis.com/v1/places:searchNearby/';
         const apiKey = process.env.GOOGLE_API_KEY;
@@ -19,7 +19,7 @@ export default class RestaurantService {
                         latitude: location.lat,
                         longitude: location.lng
                     },
-                    radius: 5000.0
+                    radius: radio
                 }
             }
         };

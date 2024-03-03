@@ -6,6 +6,8 @@ import {AccesoComponent} from "./acceso/acceso.component";
 import {RestauranteInformationComponent} from "./restaurante/restaurante-information/restaurante-information.component";
 import {PaginaPrincipalComponent} from "./pagina-principal/pagina-principal.component";
 import {accesoGuard, authGuard} from "./auth.guard";
+import {PanelRecomendacionesComponent} from "./restaurante/panel-recomendaciones/panel-recomendaciones.component";
+import {PanelComponent} from "./panel/panel.component";
 
 const routes: Routes = [
   {
@@ -24,7 +26,7 @@ const routes: Routes = [
       },
       {
         path: 'recomendaciones',
-        component: RestaurantePanelComponent,
+        component: PanelComponent,
       },
       {
         path: 'informacion',

@@ -17,6 +17,9 @@ import {MatChipsModule} from '@angular/material/chips';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTooltipModule} from '@angular/material/tooltip';
+import {MatSliderModule} from '@angular/material/slider';
+import {FormsModule} from '@angular/forms';
+import {MatExpansionModule} from '@angular/material/expansion';
 
 import {HttpClientModule} from '@angular/common/http';
 import {RestauranteModule} from './restaurante/restaurante.module';
@@ -26,13 +29,15 @@ import {UbicationService} from "./services/ubication.service";
 import {environment} from "../environment/environment";
 import {AngularFireModule} from "@angular/fire/compat";
 import { MatTabsModule } from '@angular/material/tabs';
+import { PanelComponent } from './panel/panel.component';
+import {MatRadioModule} from "@angular/material/radio";
 
 export function iniciarApp(ubicacionService: UbicationService) {
   return () => ubicacionService.obtenerUbicacion();
 }
 
 @NgModule({
-  declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent, AccesoComponent],
+  declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent, AccesoComponent, PanelComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -48,10 +53,14 @@ export function iniciarApp(ubicacionService: UbicationService) {
     MatCardModule,
     MatChipsModule,
     MatTabsModule,
+    FormsModule,
+    MatExpansionModule,
     MatSidenavModule,
     MatMenuModule,
     MatTooltipModule,
+    MatSliderModule,
     AngularFireModule.initializeApp(environment.FIREBASE),
+    MatRadioModule,
   ],
   providers: [
     UbicationService,
@@ -61,7 +70,7 @@ export function iniciarApp(ubicacionService: UbicationService) {
       deps: [UbicationService],
       multi: true
     }],
-  bootstrap: [AppComponent],
+  bootstrap: [AppComponent]
 })
 export class AppModule {
 }

@@ -1,8 +1,4 @@
 <div class="container">
-  <button class="filter-button" mat-raised-button (click)="go_filter()">
-    <mat-icon>star</mat-icon>
-    Filtros
-  </button>
   <div class="scrollable-content">
     <ng-container *ngFor="let cuisineGroup of uniqueCuisines">
       <h1>{{ obtenerEspecialidadEnEspanol(cuisineGroup.cuisine) }}</h1>

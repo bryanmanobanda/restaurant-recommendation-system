@@ -3,6 +3,7 @@ interface Route {
     distanceMeters: number;
     duration: string;
     polyline: string;
+    travel: string;
 }
 
 export default Route;
