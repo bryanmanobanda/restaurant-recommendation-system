@@ -1,20 +1,20 @@
-.example-h2 {
+.h2 {
   margin-left: 10px;
   margin-right: 10px;
 }
 
-.example-section {
+.section {
   display: flex;
   flex-wrap: wrap;
   align-content: center;
   align-items: center;
 }
 
-.example-margin {
+.margin {
   margin: 8px;
 }
 
-.example-width {
+.width {
   max-width: 180px;
   width: 100%;
 }
@@ -28,11 +28,11 @@
   margin-top: 8px;
 }
 
-.example-result-card h2 {
+.result-card h2 {
   margin: 0 8px;
 }
 
-.example-label-container {
+.label-container {
   display: flex;
   justify-content: space-between;
   margin: 20px 10px 0;
@@ -42,9 +42,29 @@
 .group-distance-metrics{
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
 }
 
-.example-result-card .example-value-label {
+.result-card .value-label {
   font-weight: 600;
+}
+
+.mat-mdc-tab-group{
+  height: 100%;
+}
+
+.general {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+mat-tab-group {
+  flex-grow: 1;
+  overflow: auto;
+}
+
+mat-accordion {
+  flex-grow: 1;
+  overflow: visible;
 }

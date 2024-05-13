@@ -1,40 +1,41 @@
-<div>
-  <mat-accordion class="example-headers-align" multi>
+<div class="general">
+  <mat-accordion class="headers-align" multi>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
         <mat-panel-title>
-          Se muestra restaurantes en un radio de {{slider.value}} {{metric}}
+          Se muestra restaurantes en un radio de {{search}}
         </mat-panel-title>
       </mat-expansion-panel-header>
 
       <label id="radio-group-label"> Buscar en: </label>
       <mat-radio-group
         aria-labelledby="radio-group-label"
-        class="group-distance-metrics">
-        <mat-radio-button class="example-radio-button" (click)="setMetrics('meters')" value="m">
+        class="group-distance-metrics"
+        [(ngModel)]="metric">
+        <mat-radio-button class="radio-button" (click)="setMetrics('meters')" value="m">
           <span class="information-routes">
             Metros (m)
           </span>
         </mat-radio-button>
-        <mat-radio-button class="example-radio-button" (click)="setMetrics('kilometers')" value="km">
+        <mat-radio-button class="radio-button" (click)="setMetrics('kilometers')" value="km">
           <span class="information-routes">
             Kilómetros (km)
           </span>
         </mat-radio-button>
       </mat-radio-group>
 
-      <mat-card class="example-result-card">
+      <mat-card class="result-card">
         <mat-card-content>
-          <div class="example-label-container">
-            <label id="example-name-label" class="example-name-label"> Buscar restaurantes en un radio de </label>
-            <label class="example-value-label">{{slider.value}} {{metric}}</label>
+          <div class="label-container">
+            <label id="name-label" class="name-label"> Buscar restaurantes en un radio de </label>
+            <label class="value-label">{{slider.value}} {{metric}}</label>
           </div>
           <mat-slider
-            class="example-margin"
+            class="margin"
             [max]="max"
             [min]="min"
             [step]="step"
-            [discrete]="thumbLabel">
+            discrete="false">
             <input matSliderThumb [(ngModel)]="value" #slider>
           </mat-slider>
         </mat-card-content>
@@ -47,18 +48,11 @@
       </mat-card>
     </mat-expansion-panel>
   </mat-accordion>
-
-  <mat-tab-group (selectedTabChange)="onTabChange($event)" [(selectedIndex)]="selectedTabIndex" *ngIf="reloadTabs">
-    <mat-tab label="Para ti">
+  <mat-tab-group [(selectedIndex)]="selectedTabIndex">
+    <mat-tab label="{{tab}}" *ngFor="let tab of tabs">
       <ng-template matTabContent>
-        <app-restaurante-panel></app-restaurante-panel>
-      </ng-template>
-    </mat-tab>
-    <mat-tab label="Cerca de ti">
-      <ng-template matTabContent>
-        <app-restaurante-panel-general></app-restaurante-panel-general>
+        <app-restaurante-panel [activeTabIndex]="selectedTabIndex" [tabs]="tabs.length"></app-restaurante-panel>
       </ng-template>
     </mat-tab>
   </mat-tab-group>
-
 </div>

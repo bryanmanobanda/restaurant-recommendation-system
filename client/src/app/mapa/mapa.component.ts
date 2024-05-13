@@ -1,32 +1,43 @@
-import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core';
+import {
+  AfterContentChecked,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import {UbicationService} from "../services/ubication.service";
 import {RestaurantService} from "../services/restaurant.service";
 import Routes from "../../Modelo/ruta.interface";
 import {Subscription} from "rxjs";
 import {Especialidades} from "../../enum/especialidades.enum";
 import {Viaje} from "../../enum/viaje.enum";
+import {Turista} from "../../Modelo/turista.interface";
+import {SecurityService} from "../services/security.service";
+import {Router} from "@angular/router";
 
 declare var google: any;
+const hide = [
+  {
+    featureType: "poi",
+    elementType: "labels",
+    stylers: [{visibility: "off"}],
+  },
+  {
+    featureType: "transit",
+    elementType: "labels",
+    stylers: [{visibility: "off"}],
+  },];
 
 @Component({
   selector: 'app-mapa',
   templateUrl: './mapa.component.html',
   styleUrls: ['./mapa.component.scss'],
 })
-export class MapaComponent implements AfterViewInit, OnDestroy {
+export class MapaComponent implements AfterViewInit, OnDestroy, AfterContentChecked {
   @ViewChild('mapContainer', {static: false}) mapContainer!: ElementRef;
 
-  hide = [
-    {
-      featureType: "poi",
-      elementType: "labels",
-      stylers: [{visibility: "off"}],
-    },
-    {
-      featureType: "transit",
-      elementType: "labels",
-      stylers: [{visibility: "off"}],
-    },]
   map: any;
   rutaPolyline: any;
   ruta: Routes;
@@ -37,43 +48,46 @@ export class MapaComponent implements AfterViewInit, OnDestroy {
   recibirRutaSubscription: Subscription | undefined;
   enviarRutaSubscription: Subscription | undefined;
   circleRadiusSubscription: Subscription;
-circle:number = 5000
+  filterNumberSubscription: Subscription
+  circle:number = 5000
   circleMapRadius :any
+  user:Turista
+  userSubscriber:Subscription
+  thumbLabel = false;
+  value = 0;
+  filter_number = 0
 
-  constructor(private ubication: UbicationService, private filter: RestaurantService) {
+  constructor(private ss: SecurityService, private cdref: ChangeDetectorRef,  private router: Router, private ubication: UbicationService, private filter: RestaurantService) {
   }
 
   ngAfterViewInit(): void {
-    this.initMap()
-/*
-    this.listaRestaurantesSubscription = this.filter.obtenerListaRestaurantesObservable().subscribe(listaRestaurantes => {
-      if (this.map && listaRestaurantes.length > 0) {
-        this.clearMarkers();
-        this.updateMarkers(listaRestaurantes);
+    this.filterNumberSubscription = this.filter.filterNumber$.subscribe(
+      (filterNumber) => {
+        this.filter_number = filterNumber
       }
-    });
-*/
-
+    );
+    this.initMap()
     this.listaSecundariaSubscription = this.filter.obtenerListaSecundariaObservable().subscribe(listaSecundaria => {
-      if (this.map && listaSecundaria.length > 0) {
+      if (this.map && listaSecundaria) {
         this.clearMarkers();
         this.updateMarkers(listaSecundaria);
       }
     });
 
     this.circleRadiusSubscription = this.ubication.circleRadius.subscribe(radius => {
-      // Actualizar el radio del círculo en el mapa
       this.circle = radius;
       this.circleMap()
     });
 
     this.recibirRutaSubscription = this.filter.recibirRuta().subscribe((data) => {
       this.ruta = data
-      console.log(this.ruta.travel)
       this.drawRoutes();
     });
+  }
 
-
+  ngAfterContentChecked() {
+    this.user = this.filter.userProfile
+    this.cdref.detectChanges();
   }
 
   ngOnDestroy() {
@@ -91,17 +105,32 @@ circle:number = 5000
     if (this.listaSecundariaSubscription) {
       this.listaSecundariaSubscription.unsubscribe();
     }
+/*
+    if(this.userSubscriber){
+      this.userSubscriber.unsubscribe()
+    }
+*/
+  }
 
+  async logOut(): Promise<void>{
+    this.filter.setListaSecundaria([])
+    this.filter.actualizarListaRestaurantes([])
+    try{
+      await this.ss.logOut()
+      await this.router.navigateByUrl("acceso")
+    }catch(error){
+      console.error(error)
+    }
   }
 
   initMap() {
     const mapOptions = {
       center: this.ubication.pos,
       zoom: 18,
-      minZoom: 13,
+      minZoom: 10,
       maxZoom: 20,
       disableDefaultUI: true,
-      styles: this.hide
+      styles: hide
     };
 
     this.map = new google.maps.Map(
@@ -260,6 +289,16 @@ circle:number = 5000
       return matches[0];
     }
     return '0';
+  }
+
+  go_filter(){
+    this.filter_number = -1
+    this.router.navigateByUrl('filtros')
+  }
+
+  clean_filters(){
+    this.filter.cleanFilter()
+    this.router.navigateByUrl('recomendaciones')
   }
 
 }

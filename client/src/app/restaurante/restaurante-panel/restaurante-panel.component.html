@@ -1,7 +1,20 @@
-<div class="container">
+<div class="spinner" *ngIf="!ready">
+  <mat-spinner></mat-spinner>
+  <span>Buscando restaurantes</span>
+</div>
+
+<div class="spinner" *ngIf="listaRestaurantes.length == 0 && ready">
+  <img src="./assets/icon.png" alt="" width="150px" height="150px">
+  <p>{{information}}</p>
+</div>
+
+<div class="container" *ngIf="ready">
   <div class="scrollable-content">
     <ng-container *ngFor="let cuisineGroup of uniqueCuisines">
-      <h1>{{ obtenerEspecialidadEnEspanol(cuisineGroup.cuisine) }}</h1>
+      <div class="type-food">
+        <mat-icon> restaurant_menu</mat-icon>
+        <h1>{{ cuisineGroup.cuisine | translate: 'especialidad' }}</h1>
+      </div>
       <div *ngFor="let restaurante of cuisineGroup.restaurants">
         <app-restaurante-card [restaurante]="restaurante"
                               [ubication]="pos"

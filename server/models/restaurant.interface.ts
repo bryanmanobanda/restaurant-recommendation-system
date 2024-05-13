@@ -16,6 +16,8 @@ interface Restaurant {
     location: Location;
     photos: { name: string; }[];
     phone: string;
+    reviews: {review: string}[];
+    score: number;
 }
 
 export default Restaurant;

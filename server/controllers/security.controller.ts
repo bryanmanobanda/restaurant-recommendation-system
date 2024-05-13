@@ -7,6 +7,7 @@ export const postTurista = async (req: Request, res: Response) => {
         uid: req.body.user.uid,
         nombre: req.body.user.nombre,
         correo:req.body.user.correo,
+        foto: req.body.user.foto,
         cocina: {},
         calidad_servicio: {},
         nivel_precio: {}

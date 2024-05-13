@@ -1,4 +1,4 @@
-$title-size: 15px;
+$title-size: 25px;
 
 mat-card {
   position: absolute;
@@ -9,14 +9,38 @@ mat-card {
   z-index: 1;
 }
 
+.information {
+  color: black;
+  padding: 0;
+  margin: 10px 0;
+  font-size: 15px;
+}
+
+.mat-mdc-card-header {
+  margin: 14px 0;
+}
+
 .mat-mdc-tab-group {
   height: 100%;
   overflow-y: hidden;
 }
 
-.mat-card-image {
+.mdc-card__media {
+  height: 170px;
   width: 400px;
-  height: 167px;
+}
+
+.close {
+  position: absolute;
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  color: white;
+  z-index: 1;
+  margin: 5px;
+  top: 0;
+  right: 0;
+  background: #716e6eab;
 }
 
 .mat-mdc-card-header {
@@ -33,6 +57,7 @@ mat-card {
 
 .information > mat-card-content {
   padding: 0;
+  margin: 10px 0;
 }
 
 .star-icon {
@@ -70,6 +95,10 @@ mat-card {
   text-decoration: none;
   color: inherit;
   border-bottom: 1px solid;
+}
+
+.close:hover{
+  background: #c70000;
 }
 
 button {

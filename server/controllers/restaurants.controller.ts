@@ -1,26 +1,19 @@
 import {Request, Response} from "express";
 import RestaurantService from "../services/restaurant.services";
-import Restaurant from "../models/restaurant.interface";
-import RecommendationServices from "../services/recommendation.services";
 import InformationService from "../services/information.service";
 import RoutesService from "../services/routes.service";
 import {firestore} from "../firebase";
 import {Turista} from "../models/turista.interface";
-/*
-        // Falta que los filtros cambien de acuerdo a lo que se selecciona
-        // Falta mostrar los restaurantes que se realiza la busqueda
-        // Falta que muestre la vista anterior sin hacer la consulta
-        // Falta volver a los restaurantes recomendados sin hacer la consulta.
-        // Falta actualizar en el mapa los restaurantes.
-        // hacer la búsqueda de las preferencias en firestore, cuisines filtrar por los de mayor peso
-*/
+import WatsonService from "../services/watson.service";
+
 export const postRestaurants = async (req: Request, res: Response) => {
     try {
         const uid = req.body.uid;
         const location = req.body.location;
         const radio = req.body.radio
 
-        const restaurants = await RestaurantService.buscarRestaurantesCercanos(location, radio);
+        let restaurants = await RestaurantService.buscarRestaurantesCercanos(location, radio);
+        restaurants = await WatsonService.analizarSentimientos(restaurants);
 
         const userSnapshot = await firestore.collection('turist').doc(uid).get();
         const user_Profile = userSnapshot.data() as Turista;
@@ -61,7 +54,6 @@ const convertirMapaAClaveValor = (claves: string[], mapa: any): { [key: string]:
     });
     return claveValor;
 };
-
 
 export const postInformation = async (req: Request, res: Response) => {
     try {

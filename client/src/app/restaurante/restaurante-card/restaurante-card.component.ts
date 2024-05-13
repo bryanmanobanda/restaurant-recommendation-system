@@ -3,6 +3,8 @@ import Restaurant from "../../../Modelo/restaurante.interface";
 import {environment} from "../../../environment/environment";
 import {RestaurantService} from "../../services/restaurant.service";
 import {Subscription} from "rxjs";
+import {Nivel_Precio} from "../../../enum/nivel_precio.enum";
+import {Especialidades} from "../../../enum/especialidades.enum";
 
 @Component({
   selector: 'app-restaurante-card',
@@ -66,22 +68,13 @@ export class RestauranteCardComponent implements OnDestroy {
     return icons;
   }
 
-  getPriceLevelDescription(priceLevel: string | undefined): string | undefined {
-    switch (priceLevel) {
-      case 'PRICE_LEVEL_FREE':
-        return 'Gratis';
-      case 'PRICE_LEVEL_INEXPENSIVE':
-        return 'Económico';
-      case 'PRICE_LEVEL_MODERATE':
-        return 'Moderado';
-      case 'PRICE_LEVEL_EXPENSIVE':
-        return 'Costoso';
-      case 'PRICE_LEVEL_VERY_EXPENSIVE':
-        return 'Muy costoso';
-      default:
-        return undefined;
+    obtenerEspecialidadEnEspanol(especialidad: string): string {
+        return Especialidades[especialidad as keyof typeof Especialidades] || especialidad;
     }
-  }
+
+    obtenerNivelPrecioEnEspanol(nivel_precio: string): string {
+        return Nivel_Precio[nivel_precio as keyof typeof Nivel_Precio] || nivel_precio;
+    }
 
   protected readonly environment = environment;
 }

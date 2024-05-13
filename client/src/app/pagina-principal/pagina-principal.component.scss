@@ -28,7 +28,7 @@
 mat-tab-group{
   height: 100%;
 }
-
+/*
 .mat-mdc-fab:not(.mdc-fab--extended), .mat-mdc-mini-fab:not(.mdc-fab--extended) {
   position: absolute;
   margin: 10px;
@@ -36,18 +36,18 @@ mat-tab-group{
   right: 0;
   z-index: 1;
 }
-
+*/
 .mat-mdc-card-title{
   font-size: large;
   font-weight: normal;
 }
-
+/*
 .foto-perfil{
   width: 48px;
   height: 48px;
   border-radius: 50%;
 }
-
+*/
 @media (max-width: 768px) {
   .flex-container {
     flex-direction: column-reverse;

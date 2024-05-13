@@ -1,6 +1,6 @@
 export interface Preferencias {
     uid: string,
-    nivelPrecio: string,
-    cocina: string[],
-    rating: string
+    prices: string,
+    cuisines: string[],
+    ratings: string
 }

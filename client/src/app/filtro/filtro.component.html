@@ -2,29 +2,44 @@
   <button mat-icon-button class="close" (click)="close()">
     <mat-icon>arrow_back</mat-icon>
   </button>
-  <h1>Preferencias de restaurantes</h1>
+  <h1>Filtrar restaurantes</h1>
 </div>
 
-<form [formGroup]="filterForm" (ngSubmit)="buscar()">
-  <mat-form-field>
-    <mat-label>Clasificación</mat-label>
-    <mat-select formControlName="rating" id="rating">
-      <mat-option *ngFor="let rate of rating" value="{{rate}}">{{rate}} Estrella</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <mat-form-field>
-    <mat-label>Nivel de precio</mat-label>
-    <mat-select formControlName="price_level" id="price_level">
-      <mat-option *ngFor="let price of price_level" value="{{price}}">{{price}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-
-  <div class="cuisine-block" *ngIf="cocinasPrimarias">
-    <h3>Tipo de cocina</h3>
-    <mat-chip-listbox multiple="true" id="cuisine" *ngFor="let cocina of cocinasPrimarias">
-      <mat-chip-option (click)="toggleCuisine(cocina)">{{cocina}}</mat-chip-option>
-    </mat-chip-listbox>
+<form (ngSubmit)="buscar()">
+  <div class="type-block" *ngIf="cocinasPrimarias">
+    <h3>Clasificación</h3>
+    <mat-chip-listbox #rateList multiple="false">
+        <mat-chip-option selected value="''">Cualquiera</mat-chip-option>
+        <mat-chip-option *ngFor="let rate of rating" [value]="rate">
+          <ng-container *ngFor="let icon of getStarIcons(rate)">
+            <mat-icon class="star-icon">{{ icon }}</mat-icon>
+          </ng-container>
+        </mat-chip-option>
+      </mat-chip-listbox>
   </div>
+
+  <div class="type-block" *ngIf="cocinasPrimarias">
+    <h3>Nivel de precio</h3>
+    <mat-chip-listbox #priceList multiple="false">
+        <mat-chip-option selected value="''">Cualquiera</mat-chip-option>
+        <mat-chip-option *ngFor="let price of price_level"
+                          matTooltip="{{price | translate: 'nivel_precio'}}"
+                         [value]="price"
+                         matTooltipPosition="below"
+                         matTooltipHideDelay="0"
+                         aria-label="Button that displays a tooltip that hides when scrolled out of the container">
+            <ng-container *ngFor="let icon of getMoneyIcons(price | translate:'precio_number')">
+              <mat-icon class="star-icon">{{ icon }}</mat-icon>
+          </ng-container>
+        </mat-chip-option>
+      </mat-chip-listbox>
+  </div>
+
+  <div class="type-block" *ngIf="cocinasPrimarias">
+    <h3>Especialidades</h3>
+    <mat-chip-listbox #cuisineList multiple="true">
+    <mat-chip-option *ngFor="let cocina of cocinasPrimarias" [value]="cocina">{{ cocina | translate: 'especialidad'}}</mat-chip-option>
+      </mat-chip-listbox>
+    </div>
   <button type="submit" class="submit" id="buscar" mat-stroked-button>Buscar</button>
 </form>

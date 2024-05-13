@@ -1,7 +1,6 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, OnDestroy} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
 import {SecurityService} from "../services/security.service";
-import {Turista} from "../../Modelo/turista.interface";
 import {Router} from "@angular/router";
 
 @Component({
@@ -19,8 +18,8 @@ export class AccesoComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.registro != null)
-      this.registro.unsubscribe();
+    /*if (this.registro != null)
+      this.registro.unsubscribe();*/
     //this.mensajeError = '';
     //this.mensajeConfirmacion = '';
   }
@@ -59,7 +58,7 @@ export class AccesoComponent implements OnDestroy {
     }
   }
 
-  async sigInwithGoogle(){
+   async sigInwithGoogle(){
     try{
       this.ss.signInWithGoogle().
       then((result) => {
@@ -81,7 +80,7 @@ export class AccesoComponent implements OnDestroy {
             foto: result.user?.photoURL,
         }
         const data = {user, token}
-        this.registro = this.ss.registrarUsuario(data).subscribe(value => {})
+        this.registro = this.ss.registrarUsuario(data).subscribe(value => {this.router.navigateByUrl("/recomendaciones")})
       }
   }
 }

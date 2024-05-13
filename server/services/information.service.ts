@@ -18,32 +18,32 @@ export default class InformationService {
             const response = await axios.get(apiUrl, {headers});
             return {
                 id: id,
-                weekdayDescriptions: response.data.currentOpeningHours.weekdayDescriptions || [],
+                weekdayDescriptions: response.data?.currentOpeningHours?.weekdayDescriptions || [],
                 paymentOptions: {
-                    acceptsCreditCards: response.data.paymentOptions.acceptsCreditCards || false,
-                    acceptsDebitCards: response.data.paymentOptions.acceptsDebitCards || false,
-                    acceptsCashOnly: response.data.paymentOptions.acceptsCashOnly || false,
-                    acceptsNfc: response.data.paymentOptions.acceptsNfc || false
+                    acceptsCreditCards: response.data?.paymentOptions?.acceptsCreditCards || false,
+                    acceptsDebitCards: response.data?.paymentOptions?.acceptsDebitCards || false,
+                    acceptsCashOnly: response.data?.paymentOptions?.acceptsCashOnly || false,
+                    acceptsNfc: response.data?.paymentOptions?.acceptsNfc || false
                 } || {},
                 services: {
-                    takeout: response.data.takeout || false,
-                    delivery: response.data.delivery || false,
-                    dineIn: response.data.dineIn || false,
-                    curbsidePickup: response.data.curbsidePickup || false,
-                    reservable: response.data.reservable || false
+                    takeout: response.data?.takeout || false,
+                    delivery: response.data?.delivery || false,
+                    dineIn: response.data?.dineIn || false,
+                    curbsidePickup: response.data?.curbsidePickup || false,
+                    reservable: response.data?.reservable || false
                 } || {},
                 atmosphere: {
-                    outdoorSeating: response.data.outdoorSeating || false,
-                    liveMusic: response.data.liveMusic || false,
-                    goodForGroups: response.data.goodForGroups || false,
-                    goodForWatchingSports: response.data.goodForWatchingSports || false,
-                    goodForChildren: response.data.goodForChildren || false
+                    outdoorSeating: response.data?.outdoorSeating || false,
+                    liveMusic: response.data?.liveMusic || false,
+                    goodForGroups: response.data?.goodForGroups || false,
+                    goodForWatchingSports: response.data?.goodForWatchingSports || false,
+                    goodForChildren: response.data?.goodForChildren || false
                 } || {},
                 accessibilityOptions: {
-                    wheelchairAccessibleParking: response.data.accessibilityOptions.wheelchairAccessibleParking || false,
-                    wheelchairAccessibleEntrance: response.data.accessibilityOptions.wheelchairAccessibleEntrance || false,
-                    wheelchairAccessibleRestroom: response.data.accessibilityOptions.wheelchairAccessibleRestroom || false,
-                    wheelchairAccessibleSeating: response.data.accessibilityOptions.wheelchairAccessibleSeating || false
+                    wheelchairAccessibleParking: response.data?.accessibilityOptions?.wheelchairAccessibleParking || false,
+                    wheelchairAccessibleEntrance: response.data?.accessibilityOptions?.wheelchairAccessibleEntrance || false,
+                    wheelchairAccessibleRestroom: response.data?.accessibilityOptions?.wheelchairAccessibleRestroom || false,
+                    wheelchairAccessibleSeating: response.data?.accessibilityOptions?.wheelchairAccessibleSeating || false
                 } || {}
             }
 

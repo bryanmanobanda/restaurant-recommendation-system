@@ -29,48 +29,53 @@ import {UbicationService} from "./services/ubication.service";
 import {environment} from "../environment/environment";
 import {AngularFireModule} from "@angular/fire/compat";
 import { MatTabsModule } from '@angular/material/tabs';
-import { PanelComponent } from './panel/panel.component';
 import {MatRadioModule} from "@angular/material/radio";
+import {MatBadgeModule} from '@angular/material/badge';
+import {NgOptimizedImage} from "@angular/common";
+
 
 export function iniciarApp(ubicacionService: UbicationService) {
   return () => ubicacionService.obtenerUbicacion();
 }
 
 @NgModule({
-  declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent, AccesoComponent, PanelComponent],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatButtonModule,
-    ReactiveFormsModule,
-    MatIconModule,
-    HttpClientModule,
-    RestauranteModule,
-    MatCardModule,
-    MatChipsModule,
-    MatTabsModule,
-    FormsModule,
-    MatExpansionModule,
-    MatSidenavModule,
-    MatMenuModule,
-    MatTooltipModule,
-    MatSliderModule,
-    AngularFireModule.initializeApp(environment.FIREBASE),
-    MatRadioModule,
-  ],
-  providers: [
-    UbicationService,
-    {
-      provide: APP_INITIALIZER,
-      useFactory: iniciarApp,
-      deps: [UbicationService],
-      multi: true
-    }],
-  bootstrap: [AppComponent]
+    declarations: [AppComponent, FiltroComponent, MapaComponent, PaginaPrincipalComponent, AccesoComponent],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        MatFormFieldModule,
+        MatSelectModule,
+        MatInputModule,
+        MatButtonModule,
+        ReactiveFormsModule,
+        MatIconModule,
+        HttpClientModule,
+        RestauranteModule,
+        MatCardModule,
+        MatBadgeModule,
+        MatChipsModule,
+        MatTabsModule,
+        FormsModule,
+        MatExpansionModule,
+        MatSidenavModule,
+        MatMenuModule,
+        MatTooltipModule,
+        MatSliderModule,
+        AngularFireModule.initializeApp(environment.FIREBASE),
+        MatRadioModule,
+        NgOptimizedImage,
+    ],
+    providers: [
+        UbicationService,
+        {
+            provide: APP_INITIALIZER,
+            useFactory: iniciarApp,
+            deps: [UbicationService],
+            multi: true
+        }],
+    exports: [],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
 }

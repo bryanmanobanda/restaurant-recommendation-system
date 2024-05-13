@@ -5,6 +5,9 @@ import {Subscription} from "rxjs";
 import {environment} from "../../../environment/environment";
 import Information from "../../../Modelo/informacion.interface";
 import {UbicationService} from "../../services/ubication.service";
+import {Router} from "@angular/router";
+import {Especialidades} from "../../../enum/especialidades.enum";
+import {Nivel_Precio} from "../../../enum/nivel_precio.enum";
 
 @Component({
   selector: 'app-restaurante-information',
@@ -20,7 +23,7 @@ export class RestauranteInformationComponent implements OnInit, OnDestroy {
   displayedColumns = ['day', 'hours'];
   dataSource = [{day: "", hours: ""}];
 
-  constructor(private restaurant: RestaurantService, private ubication: UbicationService) {
+  constructor(private restaurant: RestaurantService, private ubication: UbicationService, private router:Router) {
   }
 
   ngOnInit(): void {
@@ -52,7 +55,7 @@ export class RestauranteInformationComponent implements OnInit, OnDestroy {
       this.enviarRutaSubscription.unsubscribe();
     }
   }
-
+/*
   mostrarRuta(id: any): void {
     this.enviarRutaSubscription = this.restaurant.obtenerRutaRestaurante(id, this.ubication.pos, "")
       .subscribe({
@@ -62,6 +65,14 @@ export class RestauranteInformationComponent implements OnInit, OnDestroy {
         error: (error) => console.error(error),
         complete: () => console.info('complete')
       });
+  }*/
+
+  mostrarRuta(id: any, travel:string): void {
+    this.enviarRutaSubscription = this.restaurant.obtenerRutaRestaurante(id, this.ubication, travel)
+        .subscribe(
+            (data) => {
+              this.restaurant.enviarRuta(data.route);
+            });
   }
 
   getStarIcons(numeroEstrellas: number): string[] {
@@ -88,21 +99,12 @@ export class RestauranteInformationComponent implements OnInit, OnDestroy {
     return icons;
   }
 
-  getPriceLevelDescription(priceLevel: string | undefined): string | undefined {
-    switch (priceLevel) {
-      case 'PRICE_LEVEL_FREE':
-        return 'Gratis';
-      case 'PRICE_LEVEL_INEXPENSIVE':
-        return 'Económico';
-      case 'PRICE_LEVEL_MODERATE':
-        return 'Moderado';
-      case 'PRICE_LEVEL_EXPENSIVE':
-        return 'Costoso';
-      case 'PRICE_LEVEL_VERY_EXPENSIVE':
-        return 'Muy costoso';
-      default:
-        return undefined;
-    }
+  obtenerEspecialidadEnEspanol(especialidad: string): string {
+    return Especialidades[especialidad as keyof typeof Especialidades] || especialidad;
+  }
+
+  obtenerNivelPrecioEnEspanol(nivel_precio: string): string {
+    return Nivel_Precio[nivel_precio as keyof typeof Nivel_Precio] || nivel_precio;
   }
 
   getDescriptionDay(description: string): string {
@@ -113,6 +115,11 @@ export class RestauranteInformationComponent implements OnInit, OnDestroy {
   getDescriptionHours(description: string): string {
     const splitDescription = description.split(': ');
     return splitDescription[1];
+  }
+
+  close(){
+    this.restaurant.setSelectedRestaurant(null);
+    this.router.navigateByUrl('recomendaciones');
   }
 
   protected readonly environment = environment;

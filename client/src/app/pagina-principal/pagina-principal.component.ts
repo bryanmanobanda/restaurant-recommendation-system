@@ -40,6 +40,7 @@ export class PaginaPrincipalComponent implements OnInit ,OnDestroy{
           nivel_precio: {}
         }
         this.user = this.ss.turista
+        this.filter.setTurista(this.user)
         console.log(this.user)
       })
   }
@@ -49,18 +50,4 @@ export class PaginaPrincipalComponent implements OnInit ,OnDestroy{
       this.userSubscriber.unsubscribe()
     }
   }
-
-  async logOut(): Promise<void>{
-    try{
-      await this.ss.logOut()
-      await this.router.navigateByUrl("acceso")
-    }catch(error){
-      console.error(error)
-    }
-
-  }
-
-
-
 }
-

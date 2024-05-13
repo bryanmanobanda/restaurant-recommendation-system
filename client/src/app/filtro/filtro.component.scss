@@ -10,25 +10,40 @@ form {
   flex-wrap: nowrap;
   align-items: center;
   margin-bottom: 10px;
+  background: #070b38e3;
+  color: #d9d9d9f2;
 }
 
 h1 {
-  font-size: 21px;
+  font-size: 17px;
   margin: 0;
   flex: 1;
 }
 
-.cuisine-block {
-  font-size: 22px;
+.type-block {
+  border: 1px #070045 solid;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+}
+
+.type-block > h3 {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0 5px;
 }
 
 .submit {
   margin-top: 30px;
-  background-color: steelblue;
+  background-color: #001f38;
+}
+
+.mat-mdc-outlined-button:not(:disabled) {
+  color: white;
 }
 
 @media (max-width: 768px) {
-  .cuisine {
+  /*.cuisine {
     display: flex;
     flex-wrap: wrap;
   }
@@ -36,5 +51,5 @@ h1 {
   .cuisine button {
     flex-basis: 45%;
     margin: 5px;
-  }
+  }*/
 }

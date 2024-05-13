@@ -8,7 +8,7 @@
   flex-direction: column;
   height: 50%;
   width: 50%;
-  background-color: #D0D6E0;
+  background-color: #af6e4b;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -27,7 +27,7 @@ h1 {
 }
 
 .registro{
-  margin-top: 30px;
+  margin-top: 15px;
   background-color: white;
   color: black;
   font-size: 16px;
@@ -58,10 +58,24 @@ h1 {
   margin-right: 5px;
 }
 
+img{
+  position: relative;
+  width: 100%;
+  top: -5%;
+}
+
 @media (max-width: 768px) {
-  .registro {
-    width: 80%;
-    margin-top: 30px;
-    background-color: steelblue;
+  .registro{
+    width: 87%;
+  }
+
+  .container{
+    height: 100%;
+    width: 100%;
+    background-color: #E7905F;
+    position: static;
+    top: 0;
+    left: 0;
+    transform: translate(0, 0);
   }
 }

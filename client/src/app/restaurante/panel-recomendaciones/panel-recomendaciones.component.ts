@@ -7,23 +7,23 @@ import Restaurant from "../../../Modelo/restaurante.interface";
 import {Turista} from "../../../Modelo/turista.interface";
 import {MapaComponent} from "../../mapa/mapa.component";
 import {UbicationService} from "../../services/ubication.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-panel-recomendaciones',
   templateUrl: './panel-recomendaciones.component.html',
   styleUrls: ['./panel-recomendaciones.component.scss']
 })
-export class PanelRecomendacionesComponent implements  OnInit, AfterViewInit{
-  thumbLabel = false;
+export class PanelRecomendacionesComponent implements  OnInit{
+  filterNumberSubscription: Subscription
+  selectedTabIndex: number = 0;
+  search = "5 km"
+  metric = "km"
   value = 5;
   max = 50;
   min = 5;
   step = 5;
-  metric = "km"
-  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
-  @ViewChild(MapaComponent) mapaComponent!: MapaComponent;
-  selectedTabIndex: number = 0;
-  reloadTabs: boolean = false; // Variable para controlar la recarga de los tabs
+  tabs:string[] = []
 
   constructor(private ubication: UbicationService, private ss: SecurityService, private router: Router, private filter: RestaurantService) {
   }
@@ -31,23 +31,29 @@ export class PanelRecomendacionesComponent implements  OnInit, AfterViewInit{
   ngOnInit() {
     this.value = 5
     this.metric = "km"
-    this.reloadTabs = true; // Cambiar el estado para recargar los tabs
-
+    this.search = this.filter.radio
+    this.filterNumberSubscription = this.filter.filterNumber$.subscribe(
+      (filterNumber) => {
+        this.tabs = filterNumber > 0 ? ['Restaurantes filtrados'] : ['Para ti', "Cerca de ti"]
+      }
+    );
   }
 
-  ngAfterViewInit() {
-    //this.tabGroup.focusTab(1)
-    this.selectedTabIndex = 1;
+  ngOnDestroy() {
+    if (this.filterNumberSubscription)
+      this.filterNumberSubscription.unsubscribe()
   }
 
   searchRestaurants(){
     let distance = (this.metric === 'km') ? (this.value * 1000) : this.value;
+    this.search = this.value + " " + this.metric
+    this.filter.radio = this.search
     this.filter.obtenerRestaurantes(this.ubication.pos,this.ss.turista.uid , distance)
       .subscribe(data => {
         console.log(data)
-        this.filter.setTurista(data.user_Profile)
         this.filter.actualizarListaRestaurantes(data);
-
+        this.ubication.updateCircleRadius(distance);
+        this.selectedTabIndex = 0;
       })
   }
 
@@ -65,69 +71,5 @@ export class PanelRecomendacionesComponent implements  OnInit, AfterViewInit{
       this.value = 5;
       this.metric = 'km';
     }
-  }
-  onTabChange(event: MatTabChangeEvent) {
-    const tabIndex = event.index;
-    const listaRestaurantes:Restaurant[] = this.obtenerListaRestaurantesPorTab(tabIndex);
-    console.log(listaRestaurantes)
-    if(listaRestaurantes)
-      this.mapaComponent.updateMarkers(listaRestaurantes);
-  }
-
-  obtenerListaRestaurantesPorTab(index: number): Restaurant[] {
-    if (index === 0) {
-      return this.filtrarRestaurantesSegunPerfil(
-        this.filter.obtenerListaRestaurantes(),
-        this.filter.userProfile
-      );
-    }
-    else {
-      return this.filtrarRestaurantesSegunPerfil2(
-        this.filter.obtenerListaRestaurantes(),
-        this.filter.userProfile
-      );
-    }
-  }
-  private filtrarRestaurantesSegunPerfil(
-    restaurantes: Restaurant[],
-    user_Profile: Turista
-  ): Restaurant[] {
-    if (!user_Profile) {
-      console.log("No se ha cargado el perfil")
-      return restaurantes; // Si no se ha cargado el perfil, mostrar todos los restaurantes
-    }
-    const preferencias = user_Profile.cocina;
-    if (!preferencias || Object.keys(preferencias).length === 0) {
-      console.log("No existen preferencoas")
-      return restaurantes; // Si no hay preferencias definidas, mostrar todos los restaurantes
-    }
-    console.log("Existen preferencias")
-    const preferenciasKeys = Object.keys(preferencias);
-    console.log(preferenciasKeys)
-    return restaurantes.filter((restaurante) =>
-      preferenciasKeys.includes(restaurante.primaryCuisine)
-    );
-
-  }
-
-  private filtrarRestaurantesSegunPerfil2(
-    restaurantes: Restaurant[],
-    user_Profile: Turista
-  ): Restaurant[] {
-    if (!user_Profile) {
-      console.log("No se ha cargado el perfil")
-      return restaurantes; // Si no se ha cargado el perfil, mostrar todos los restaurantes
-    }
-    const preferencias = user_Profile.cocina;
-    if (!preferencias || Object.keys(preferencias).length === 0) {
-      console.log("No existen preferencoas")
-      return restaurantes; // Si no hay preferencias definidas, mostrar todos los restaurantes
-    }
-    console.log("Existen preferencias")
-    const preferenciasKeys = Object.keys(preferencias);
-    console.log(preferenciasKeys)
-    return restaurantes.filter((restaurante) =>
-      !preferenciasKeys.includes(restaurante.primaryCuisine)
-    );
   }
 }

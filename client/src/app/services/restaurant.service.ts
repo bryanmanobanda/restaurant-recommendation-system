@@ -12,12 +12,18 @@ import {Turista} from "../../Modelo/turista.interface";
 export class RestaurantService {
 
   private listaRestaurantes: Restaurant[] = [];
+  public listRestaurants: Restaurant[] = [];
   public listaSecundaria: Restaurant[] = [];
+  private listaSecundariaSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
+
   private listaRestaurantesSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
   private rutaSubject: Subject<Routes> = new Subject<Routes>();
   private selectedRestaurantSubject: BehaviorSubject<Restaurant | null> = new BehaviorSubject<Restaurant | null>(null);
   userProfile: Turista
+  private filterNumberSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  filterNumber$: Observable<number> = this.filterNumberSubject.asObservable();
   public radio="5 km"
+  public filter_number = 0
 
   selectedRestaurant$: Observable<Restaurant | null> = this.selectedRestaurantSubject.asObservable();
 
@@ -25,6 +31,7 @@ export class RestaurantService {
   }
 
   enviarDatosAlBackend(data: any): Observable<any> {
+    console.log(data)
     return this.http.post<any>(`${environment.BASE_URL}/preferences`, data);
   }
 
@@ -60,10 +67,9 @@ export class RestaurantService {
 
   actualizarListaRestaurantes(data: any): void {
     this.listaRestaurantes = data.restaurants || [];
+    this.listRestaurants = this.listaRestaurantes
     this.listaRestaurantesSubject.next(this.listaRestaurantes);
   }
-
-  private listaSecundariaSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
 
   setListaSecundaria(data: Restaurant[]): void {
     this.listaSecundaria = data;
@@ -79,30 +85,39 @@ export class RestaurantService {
   }
 
   aplicarFiltros(preferencias: any): void {
-    this.listaSecundariaSubject.next(this.listaRestaurantes);
-    // Aplica los filtros de cocina
-    if (preferencias.cocina && preferencias.cocina.length > 0) {
+    console.log("lista restaurantes filtros", this.listRestaurants)
+
+    this.filterNumberSubject.next(preferencias.filter_number);
+    if (preferencias?.cuisines && preferencias?.cuisines.length > 0 && preferencias?.cuisines != ' ') {
       this.listaRestaurantes = this.listaRestaurantes.filter(restaurant => {
-        return preferencias.cocina.includes(restaurant.primaryCuisine);
+        return preferencias.cuisines.includes(restaurant.primaryCuisine);
       });
     }
 
-    // Aplica el filtro de precio
-    if (preferencias.nivelPrecio) {
+    if (preferencias?.prices && preferencias?.prices != ' ' ) {
       this.listaRestaurantes = this.listaRestaurantes.filter(restaurant => {
-        return restaurant.priceLevel === preferencias.nivelPrecio;
+        return restaurant.priceLevel === preferencias?.prices;
       });
     }
 
-    // Aplica el filtro de rating
-    if (preferencias.servicio) {
+    if (preferencias?.ratings && preferencias?.ratings != ' ') {
       this.listaRestaurantes = this.listaRestaurantes.filter(restaurant => {
-        return restaurant.rating >= preferencias.servicio;
+        return restaurant.rating >= preferencias.ratings;
       });
     }
-
-    // Después de aplicar los filtros, emite la lista actualizada
+    console.log("lista restaurantes filtros aplicados", this.listRestaurants)
     this.listaRestaurantesSubject.next(this.listaRestaurantes);
+  }
+
+  cleanFilter(){
+    this.filterNumberSubject.next(0);
+    this.listaRestaurantes = this.listRestaurants
+    console.log("clean",this.listaRestaurantes)
+    this.listaRestaurantesSubject.next(this.listRestaurants);
+  }
+
+  updateFilterNumber(number: number): void {
+    this.filterNumberSubject.next(number);
   }
 
   setSelectedRestaurant(restaurant: Restaurant | null): void {
@@ -128,9 +143,8 @@ export class RestaurantService {
       correo: user.correo,
       nivel_precio: user.nivel_precio,
       cocina: user.cocina,
-      foto: "",
+      foto: user.foto || "",
       calidad_servicio: user.calidad_servicio,
     }
   }
-
 }

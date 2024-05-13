@@ -6,12 +6,11 @@ import {BehaviorSubject} from "rxjs";
   providedIn: 'root'
 })
 export class UbicationService {
+  circleRadius: BehaviorSubject<number> = new BehaviorSubject<number>(5000);
   pos = {
     lat: 0,
     lng: 0,
   };
-
-  circleRadius: BehaviorSubject<number> = new BehaviorSubject<number>(5000); // Valor predeterminado de 5000 metros (5 km)
 
   async obtenerUbicacion(): Promise<any> {
     return new Promise<void>((resolve, reject) => {
@@ -24,7 +23,7 @@ export class UbicationService {
           resolve();
         },
         () => {
-          console.log('Ubicación no encontrada por problemas en aceptar');
+          console.log('Problemas al obtener la ubicación del dispositivo');
           reject();
         }
       );
