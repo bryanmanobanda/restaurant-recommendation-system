@@ -13,16 +13,16 @@ import {Turista} from "../../../Modelo/turista.interface";
   styleUrls: ['./restaurante-panel.component.scss']
 })
 export class RestaurantePanelComponent implements OnInit, OnDestroy {
+  uniqueCuisines: { cuisine: string, restaurants: Restaurant[] }[] = [];
+  listRestaurantsSubscription: Subscription | undefined;
+  selectedRestaurant: Restaurant | null;
   @Input() activeTabIndex: number = 0;
   @Input() tabs: number = 0;
   listaRestaurantes: any[] = [];
-  selectedRestaurant: Restaurant | null;
-  listRestaurantsSubscription: Subscription | undefined;
-  pos: any
-  uid: string|undefined
-  uniqueCuisines: { cuisine: string, restaurants: Restaurant[] }[] = [];
-  ready = false
   information = ""
+  uid: string|undefined
+  ready = false
+  pos: any
 
   constructor(private ubication: UbicationService, private filter: RestaurantService, private router: Router, private ss:SecurityService) {
   }
@@ -41,38 +41,33 @@ export class RestaurantePanelComponent implements OnInit, OnDestroy {
   }
 
   private fetchRestaurantes(): void {
-    console.log("Tab Index selected in component", this.activeTabIndex)
     if(this.listaRestaurantes.length === 0) {
       this.listRestaurantsSubscription = this.filter.obtenerRestaurantes(this.ubication.pos, this.uid, 5000)
         .subscribe(
           (data) => {
-            console.log(data)
             this.filter.setTurista(data.user_Profile)
             this.filter.actualizarListaRestaurantes(data);
-            this.listaRestaurantes = this.filtrarRestaurantesSegunPerfil(
-              this.filter.obtenerListaRestaurantes(),
-              this.filter.userProfile,
-              this.activeTabIndex
-            );
-            this.calculateUniqueCuisines();
-            this.filter.setListaSecundaria(this.listaRestaurantes);
-            this.ready = true
+            this.setVarInit()
           }
         );
     }else {
-      this.listaRestaurantes = this.filtrarRestaurantesSegunPerfil(
-        this.filter.obtenerListaRestaurantes(),
-        this.filter.userProfile,
-        this.activeTabIndex
-      );
-      this.calculateUniqueCuisines();
-      this.filter.setListaSecundaria(this.listaRestaurantes);
-      this.information = this.tabs == 2 ? (this.activeTabIndex == 0 ?
+      this.setVarInit()
+    }
+  }
+
+  private setVarInit(){
+    this.listaRestaurantes = this.filtrarRestaurantesSegunPerfil(
+      this.filter.obtenerListaRestaurantes(),
+      this.filter.userProfile,
+      this.activeTabIndex
+    );
+    this.calculateUniqueCuisines();
+    this.filter.setListaSecundaria(this.listaRestaurantes);
+    this.information = this.tabs == 2 ? (this.activeTabIndex == 0 ?
         "No se encontraron preferencias. Explora restaurantes 'Cerca de Ti'":
         "No se encuentran restaurantes en está área. Revisa tu horario y zona."):
-        "Intenta con otras opciones"
-      this.ready = true
-    }
+      "Intenta con otras opciones"
+    this.ready = true
   }
 
   private filtrarRestaurantesSegunPerfil(

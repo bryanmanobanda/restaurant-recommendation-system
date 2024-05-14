@@ -15,9 +15,9 @@ export const postTurista = async (req: Request, res: Response) => {
     let token = req.body.token
     await auth.verifyIdToken(token)
       .then(async () => {
-            await firestore.collection('turist').doc(nuevoTurista.uid).set(nuevoTurista);
-            res.status(201).json({message: '¡Registro exitoso!', nuevoTurista});
-        })
+          await firestore.collection('turist').doc(nuevoTurista.uid).set(nuevoTurista);
+        res.status(201).json({message: '¡Registro exitoso!', nuevoTurista});
+      })
         .catch((error) => {
             res.status(500).json({message: 'Error al registrarse'});
         });

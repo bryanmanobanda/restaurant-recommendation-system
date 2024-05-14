@@ -14,7 +14,6 @@ export default class RoutesService {
             "destination": destination,
             "travelMode": travelMode,
             "computeAlternativeRoutes": false,
-            //"transitPreferences": {"routingPreference": "LESS_WALKING"},
             "routeModifiers": {
                 "avoidTolls": false,
                 "avoidHighways": false,
@@ -40,7 +39,6 @@ export default class RoutesService {
                 travel: travelMode || ""
             }
         } catch (error) {
-            console.error('Error al obtener la ruta del restaurante:', error);
             throw new Error('Error al obtener la ruta del restaurante');
         }
     }

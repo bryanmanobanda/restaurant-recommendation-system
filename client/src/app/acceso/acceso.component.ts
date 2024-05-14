@@ -1,5 +1,4 @@
 import {Component, OnDestroy} from '@angular/core';
-import {FormBuilder} from '@angular/forms';
 import {SecurityService} from "../services/security.service";
 import {Router} from "@angular/router";
 
@@ -9,42 +8,15 @@ import {Router} from "@angular/router";
   styleUrls: ['./acceso.component.scss']
 })
 export class AccesoComponent implements OnDestroy {
-  //turista: Turista
   registro: any;
-  //mensajeConfirmacion: string = '';
-  //mensajeError: string = '';
 
-  constructor(private fb: FormBuilder, private ss: SecurityService, private router: Router) {
+  constructor(private ss: SecurityService, private router: Router) {
   }
 
   ngOnDestroy(): void {
-    /*if (this.registro != null)
-      this.registro.unsubscribe();*/
-    //this.mensajeError = '';
-    //this.mensajeConfirmacion = '';
+    if (this.registro != null)
+      this.registro.unsubscribe();
   }
-
-/*
-  enviarFormulario(): void {
-    if (this.registroForm.valid) {
-      this.registro = this.ss.registrarUsuario(this.registroForm.value)
-        .subscribe(
-          (response) => {
-            if (response.status === 201 && !response.message.includes('Correo')) {
-              this.turista = response.turista;
-              this.mensajeConfirmacion = response.message;
-            } else {
-              this.mensajeError = response.message;
-            }
-          },
-          (error) => {
-            this.mensajeError = 'Error al registrarse';
-          }
-        );
-    } else {
-      this.mensajeError = 'Los datos ingresados son inválidos.';
-    }
-  }*/
 
   sigInwithFacebook(){
     try{
@@ -80,7 +52,8 @@ export class AccesoComponent implements OnDestroy {
             foto: result.user?.photoURL,
         }
         const data = {user, token}
-        this.registro = this.ss.registrarUsuario(data).subscribe(value => {this.router.navigateByUrl("/recomendaciones")})
+        this.registro = this.ss.registrarUsuario(data).subscribe(value =>
+        {this.router.navigateByUrl("/recomendaciones")})
       }
   }
 }

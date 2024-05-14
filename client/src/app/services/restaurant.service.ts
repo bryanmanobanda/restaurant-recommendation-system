@@ -10,34 +10,30 @@ import {Turista} from "../../Modelo/turista.interface";
   providedIn: 'root'
 })
 export class RestaurantService {
+  private selectedRestaurantSubject: BehaviorSubject<Restaurant | null> = new BehaviorSubject<Restaurant | null>(null);
+  private filterNumberSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
+  private listaSecundariaSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
+  private listaRestaurantesSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
+  private rutaSubject: Subject<Routes> = new Subject<Routes>();
+  selectedRestaurant$: Observable<Restaurant | null> = this.selectedRestaurantSubject.asObservable();
+  filterNumber$: Observable<number> = this.filterNumberSubject.asObservable();
 
   private listaRestaurantes: Restaurant[] = [];
   public listRestaurants: Restaurant[] = [];
   public listaSecundaria: Restaurant[] = [];
-  private listaSecundariaSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
-
-  private listaRestaurantesSubject: Subject<Restaurant[]> = new Subject<Restaurant[]>();
-  private rutaSubject: Subject<Routes> = new Subject<Routes>();
-  private selectedRestaurantSubject: BehaviorSubject<Restaurant | null> = new BehaviorSubject<Restaurant | null>(null);
-  userProfile: Turista
-  private filterNumberSubject: BehaviorSubject<number> = new BehaviorSubject<number>(0);
-  filterNumber$: Observable<number> = this.filterNumberSubject.asObservable();
-  public radio="5 km"
   public filter_number = 0
-
-  selectedRestaurant$: Observable<Restaurant | null> = this.selectedRestaurantSubject.asObservable();
+  public radio="5 km"
+  userProfile: Turista
 
   constructor(private http: HttpClient) {
   }
 
   enviarDatosAlBackend(data: any): Observable<any> {
-    console.log(data)
     return this.http.post<any>(`${environment.BASE_URL}/preferences`, data);
   }
 
   obtenerRestaurantes(location: any, uid: String | undefined, radio:number): Observable<any> {
     const data = {uid, location, radio}
-    console.log(data)
     return this.http.post<any>(`${environment.BASE_URL}/api/restaurants`, data);
   }
 
@@ -57,7 +53,6 @@ export class RestaurantService {
       "placeId": id,
       travelMode
     }
-
     return this.http.post<any>(`${environment.BASE_URL}/api/routes`, data);
   }
 
@@ -80,14 +75,9 @@ export class RestaurantService {
     return this.listaSecundariaSubject.asObservable();
   }
 
-  obtenerListaRestaurantesObservable(): Observable<Restaurant[]> {
-    return this.listaRestaurantesSubject.asObservable();
-  }
-
   aplicarFiltros(preferencias: any): void {
-    console.log("lista restaurantes filtros", this.listRestaurants)
-
     this.filterNumberSubject.next(preferencias.filter_number);
+
     if (preferencias?.cuisines && preferencias?.cuisines.length > 0 && preferencias?.cuisines != ' ') {
       this.listaRestaurantes = this.listaRestaurantes.filter(restaurant => {
         return preferencias.cuisines.includes(restaurant.primaryCuisine);
@@ -105,14 +95,13 @@ export class RestaurantService {
         return restaurant.rating >= preferencias.ratings;
       });
     }
-    console.log("lista restaurantes filtros aplicados", this.listRestaurants)
+
     this.listaRestaurantesSubject.next(this.listaRestaurantes);
   }
 
   cleanFilter(){
     this.filterNumberSubject.next(0);
     this.listaRestaurantes = this.listRestaurants
-    console.log("clean",this.listaRestaurantes)
     this.listaRestaurantesSubject.next(this.listRestaurants);
   }
 

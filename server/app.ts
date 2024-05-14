@@ -15,7 +15,7 @@ class App {
     }
 
     private config(): void {
-        const whitelist = ['http://localhost:4200']
+        const whitelist = ['http://localhost:4200', 'http://localhost:3000']
 
         const corsOptions = {
             origin: function (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) {
@@ -30,6 +30,7 @@ class App {
         this.app.use(express.json())
         this.app.use(cors(corsOptions))
         this.app.use(morgan('dev'))
+        //this.app.use(express.static(process.cwd()+"/client/dist/client"))
         this.app.use(express.urlencoded({extended: false}))
     }
 

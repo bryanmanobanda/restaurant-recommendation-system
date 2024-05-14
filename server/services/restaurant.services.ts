@@ -58,7 +58,6 @@ export default class RestaurantService {
             })).filter((restaurant: Restaurant) => restaurant.openNow);
             return restaurants;
         } catch (error) {
-            console.error('Error al buscar restaurantes:', error);
             throw new Error('Error al buscar restaurantes');
         }
     }

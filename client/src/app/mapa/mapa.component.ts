@@ -11,7 +11,6 @@ import {UbicationService} from "../services/ubication.service";
 import {RestaurantService} from "../services/restaurant.service";
 import Routes from "../../Modelo/ruta.interface";
 import {Subscription} from "rxjs";
-import {Especialidades} from "../../enum/especialidades.enum";
 import {Viaje} from "../../enum/viaje.enum";
 import {Turista} from "../../Modelo/turista.interface";
 import {SecurityService} from "../services/security.service";
@@ -52,8 +51,6 @@ export class MapaComponent implements AfterViewInit, OnDestroy, AfterContentChec
   circle:number = 5000
   circleMapRadius :any
   user:Turista
-  userSubscriber:Subscription
-  thumbLabel = false;
   value = 0;
   filter_number = 0
 
@@ -105,11 +102,6 @@ export class MapaComponent implements AfterViewInit, OnDestroy, AfterContentChec
     if (this.listaSecundariaSubscription) {
       this.listaSecundariaSubscription.unsubscribe();
     }
-/*
-    if(this.userSubscriber){
-      this.userSubscriber.unsubscribe()
-    }
-*/
   }
 
   async logOut(): Promise<void>{

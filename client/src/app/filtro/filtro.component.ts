@@ -20,24 +20,18 @@ export class FiltroComponent implements OnInit, OnDestroy {
   cocinasPrimarias: string[] = [];
   rating: number[] = [];
   price_level: string[] = [];
-  filteredRestaurants: Restaurant[] = [];
-  price_levels: string[] = [];
   filterForm: FormGroup;
   selectedCuisines: string[] = [];
   listaRestaurantesSubscription: Subscription | undefined;
   listaRestaurantes: Restaurant[]
-  selectedRating:number
-  selectedPrice:string
-  max = 50;
   value = 5;
 
-  constructor(private fb: FormBuilder, private fs: RestaurantService, private router: Router, private ss:SecurityService) {
+  constructor(private fs: RestaurantService, private router: Router, private ss:SecurityService) {
   }
 
   ngOnInit() {
     this.listaRestaurantes = this.fs.listRestaurants
     this.iniciarFiltros()
-    console.log(this.listaRestaurantes)
   }
 
   iniciarFiltros(){
@@ -73,10 +67,9 @@ export class FiltroComponent implements OnInit, OnDestroy {
       uid: this.ss.turista.uid,
       filter_number: this.cuisineList?.value ? this.cuisineList?.value.length : 0  + this.rateList?.value ? 1:0 + this.priceList?.value ? 1:0
     };
-console.log(selectedItems)
+
     this.fs.enviarDatosAlBackend(selectedItems).subscribe(
       (response) => {
-        console.log('Datos enviados correctamente al backend', response);
         this.fs.aplicarFiltros(selectedItems);
         this.router.navigateByUrl('recomendaciones');
       }

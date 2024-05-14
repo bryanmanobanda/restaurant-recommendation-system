@@ -14,22 +14,19 @@ import Restaurant from "../../Modelo/restaurante.interface";
   styleUrls: ['./pagina-principal.component.scss']
 })
 export class PaginaPrincipalComponent implements OnInit ,OnDestroy{
-  user:Turista
   userSubscriber:Subscription
-  thumbLabel = false;
   value = 0;
+  user:Turista
 
   @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
   @ViewChild(MapaComponent) mapaComponent!: MapaComponent;
-  constructor(private ss: SecurityService, private router: Router, private filter: RestaurantService) {
+  constructor(private ss: SecurityService, private filter: RestaurantService) {
   }
 
   ngOnInit(){
     this.userSubscriber = this.ss.authState$.
     subscribe(
       (result)=>{
-        //console.log("tokenid", result?.getIdToken().then(value => console.log(value)))
-        //console.log(result?.user.UserImpl.accessToken)
         this.ss.turista = {
           uid: result?.uid,
           nombre: result?.displayName,
@@ -41,7 +38,6 @@ export class PaginaPrincipalComponent implements OnInit ,OnDestroy{
         }
         this.user = this.ss.turista
         this.filter.setTurista(this.user)
-        console.log(this.user)
       })
   }
 

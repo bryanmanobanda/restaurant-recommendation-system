@@ -48,7 +48,6 @@ export default class InformationService {
             }
 
         } catch (error) {
-            console.error('Error al obtener informacion de restaurante:', error);
             throw new Error('Error al obtener informacion de restaurante');
         }
     }

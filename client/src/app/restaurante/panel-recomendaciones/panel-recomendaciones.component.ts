@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatTabChangeEvent, MatTabGroup} from "@angular/material/tabs";
 import {SecurityService} from "../../services/security.service";
 import {Router} from "@angular/router";
@@ -14,7 +14,7 @@ import {Subscription} from "rxjs";
   templateUrl: './panel-recomendaciones.component.html',
   styleUrls: ['./panel-recomendaciones.component.scss']
 })
-export class PanelRecomendacionesComponent implements  OnInit{
+export class PanelRecomendacionesComponent implements  OnInit, OnDestroy{
   filterNumberSubscription: Subscription
   selectedTabIndex: number = 0;
   search = "5 km"
@@ -25,7 +25,7 @@ export class PanelRecomendacionesComponent implements  OnInit{
   step = 5;
   tabs:string[] = []
 
-  constructor(private ubication: UbicationService, private ss: SecurityService, private router: Router, private filter: RestaurantService) {
+  constructor(private ubication: UbicationService, private ss: SecurityService, private filter: RestaurantService) {
   }
 
   ngOnInit() {
@@ -50,7 +50,6 @@ export class PanelRecomendacionesComponent implements  OnInit{
     this.filter.radio = this.search
     this.filter.obtenerRestaurantes(this.ubication.pos,this.ss.turista.uid , distance)
       .subscribe(data => {
-        console.log(data)
         this.filter.actualizarListaRestaurantes(data);
         this.ubication.updateCircleRadius(distance);
         this.selectedTabIndex = 0;

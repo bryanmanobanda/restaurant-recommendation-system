@@ -19,48 +19,11 @@ export class AppComponent implements OnInit{
     document.body.appendChild(script);
   }
   initMap() {}
-  /*constructor(private securityService: SecurityService, private router: Router,) {}
-  ngOnInit(){
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-          (position: GeolocationPosition) => {
-            this.securityService.pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            console.log(this.securityService.pos)
-
-            this.router.navigate(['/recomendaciones']);
-          },
-          () => {
-            console.log('Ubicación no encontrada por problemas en aceptar');
-          }
-      );
-    } else {
-      this.handleLocationError(false);
-    }
-  }
-  handleLocationError(
-      browserHasGeolocation: boolean,
-      error?: GeolocationPositionError
-  ): void {
-    let errorMessage = '';
-    if (browserHasGeolocation) {
-      errorMessage = 'Error: The Geolocation service failed.';
-    } else {
-      errorMessage = "Error: Your browser doesn't support geolocation.";
-    }
-
-    if (error) {
-      errorMessage += ` Message: ${error.message}`;
-    }
-
-    console.error(errorMessage);
-  }*/
-  protected readonly environment = environment;
-
   ngOnInit(): void {
     (window as any).initMap = () => this.initMap();
     this.loadMap()
   }
+
+  protected readonly environment = environment;
+
 }

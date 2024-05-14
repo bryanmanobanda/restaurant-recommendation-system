@@ -11,41 +11,22 @@
         <mat-card-title *ngIf="restaurante?.displayName">{{restaurante?.displayName}}</mat-card-title>
         <mat-card-subtitle>
           <div class="rating-comments" *ngIf="restaurante?.rating">
-            <ng-container *ngFor="let icon of getStarIcons(restaurante?.rating||0)">
+            <ng-container *ngFor="let icon of restaurante?.rating||0 | translate: 'starIcons'">
               <mat-icon class="star-icon">{{ icon }}</mat-icon>
             </ng-container>
             <div *ngIf="restaurante?.userRatingCount">{{restaurante?.rating}} - ({{restaurante?.userRatingCount}})</div>
           </div>
           <div class="information">
             <mat-card-content *ngIf="restaurante?.primaryCuisine">
-              <strong>Especialidad:</strong> {{obtenerEspecialidadEnEspanol(restaurante?.primaryCuisine || "")}} </mat-card-content>
+              <strong>Especialidad:</strong> {{restaurante?.primaryCuisine | translate: 'especialidad'}} </mat-card-content>
             <mat-card-content *ngIf="restaurante?.priceLevel"><strong>Precio: </strong>
-              {{ obtenerNivelPrecioEnEspanol(restaurante?.priceLevel || "") }} </mat-card-content>
+              {{ restaurante?.priceLevel | translate: 'nivel_precio' }} </mat-card-content>
             <mat-card-content *ngIf="restaurante?.shortFormattedAddress">
               <strong>Dirección:</strong> {{restaurante?.shortFormattedAddress}} </mat-card-content>
             <mat-card-content *ngIf="restaurante?.websiteUri" class="website">
               <mat-icon>language</mat-icon>
               <a href="{{ restaurante?.websiteUri }}" target="_blank">Visitar Website</a>
             </mat-card-content>
-            <!--mat-card-actions align="end" (click)="$event.stopPropagation()">
-              <label id="example-radio-group-label"> Conocer ruta a:</label>
-              <mat-radio-group
-                      aria-labelledby="example-radio-group-label"
-                      class="example-radio-group">
-                <mat-radio-button class="example-radio-button" (change)="mostrarRuta(restaurante?.id, 'WALK')" value="WALK">
-        <span class="information-routes">
-          <mat-icon class="walk"> directions_run</mat-icon>
-          Pie
-        </span>
-                </mat-radio-button>
-                <mat-radio-button class="example-radio-button" (change)="mostrarRuta(restaurante?.id, 'DRIVE')" value="DRIVE">
-        <span class="information-routes">
-          <mat-icon class="walk">drive_eta</mat-icon>
-          Vehículo
-        </span>
-                </mat-radio-button>
-              </mat-radio-group>
-            </mat-card-actions-->
           </div>
         </mat-card-subtitle>
       </mat-card-header>
@@ -72,7 +53,7 @@
           </mat-list-item>
         </mat-list>
 
-        <div mat-subheader>Servicios</div>
+        <div mat-subheader *ngIf="informacion?.services">Servicios</div>
         <mat-list role="list">
           <mat-list-item *ngIf="informacion.services.takeout" role="listitem">
             <mat-icon matListItemIcon>check</mat-icon>
@@ -96,7 +77,7 @@
           </mat-list-item>
         </mat-list>
 
-        <div mat-subheader>Ambiente</div>
+        <div mat-subheader *ngIf="informacion?.atmosphere">Ambiente</div>
         <mat-list role="list">
           <mat-list-item *ngIf="informacion.atmosphere.outdoorSeating" role="listitem">
             <mat-icon matListItemIcon>check</mat-icon>
@@ -120,7 +101,7 @@
           </mat-list-item>
         </mat-list>
 
-        <div mat-subheader>Accesibilidad</div>
+        <div mat-subheader *ngIf="informacion?.accessibilityOptions">Accesibilidad</div>
         <mat-list role="list">
           <mat-list-item *ngIf="informacion.accessibilityOptions.wheelchairAccessibleParking" role="listitem">
             <mat-icon matListItemIcon>check</mat-icon>

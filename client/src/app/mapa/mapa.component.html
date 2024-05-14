@@ -10,7 +10,9 @@
   Limpiar Filtros
 </button>
 
-<button mat-mini-fab *ngIf="user?.nombre" color="primary" [matMenuTriggerFor]="menu" matTooltip="{{user.nombre}}" matTooltipPosition="left"  aria-label="Boton con icono de perfil">
+<button mat-mini-fab *ngIf="user?.nombre" color="primary" [matMenuTriggerFor]="menu"
+        matTooltip="{{user.nombre}}" matTooltipPosition="left"
+        aria-label="Boton con icono de perfil">
   <mat-icon *ngIf="!user?.foto">person</mat-icon>
   <img class="foto-perfil" *ngIf="user?.foto" ngSrc="{{user.foto}}" alt="Foto de perfil" fill="">
 </button>

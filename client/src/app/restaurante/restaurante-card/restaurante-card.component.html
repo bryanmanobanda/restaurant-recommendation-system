@@ -7,22 +7,18 @@
       <mat-card-title *ngIf="restaurante?.displayName">{{restaurante?.displayName}}</mat-card-title>
       <mat-card-subtitle>
         <div class="rating-comments">
-          <ng-container *ngFor="let icon of getStarIcons(restaurante?.rating||0)">
+          <ng-container *ngFor="let icon of restaurante?.rating||0 | translate: 'starIcons'">
             <mat-icon class="star-icon">{{ icon }}</mat-icon>
           </ng-container>
           <div *ngIf="restaurante?.userRatingCount">{{restaurante?.rating}} - ({{restaurante?.userRatingCount}})</div>
         </div>
         <div class="information">
           <mat-card-content *ngIf="restaurante?.primaryCuisine">
-            <strong>Especialidad:</strong> {{obtenerEspecialidadEnEspanol(restaurante?.primaryCuisine || "")}} </mat-card-content>
+            <strong>Especialidad:</strong> {{restaurante?.primaryCuisine | translate: 'especialidad'}} </mat-card-content>
           <mat-card-content *ngIf="restaurante?.priceLevel"><strong>Precio: </strong>
-            {{obtenerNivelPrecioEnEspanol(restaurante?.priceLevel || "") }} </mat-card-content>
+            {{ restaurante?.priceLevel | translate: 'nivel_precio' }} </mat-card-content>
           <mat-card-content *ngIf="restaurante?.shortFormattedAddress">
             <strong>Dirección:</strong> {{restaurante?.shortFormattedAddress}} </mat-card-content>
-          <!--mat-card-content *ngIf="restaurante?.websiteUri" class="website">
-            <mat-icon>language</mat-icon>
-            <a href="{{ restaurante?.websiteUri }}" target="_blank">Visitar Website</a>
-          </mat-card-content-->
           <mat-card-content *ngIf="restaurante?.phone">
             <strong>Teléfono:</strong> {{restaurante?.phone}} </mat-card-content>
         </div>
@@ -33,17 +29,17 @@
     </mat-card-title-group>
   </mat-card-header>
   <mat-card-actions align="end" (click)="$event.stopPropagation()">
-    <label id="example-radio-group-label"> Conocer ruta a:</label>
+    <label id="radio-group-label"> Conocer ruta a:</label>
     <mat-radio-group
-      aria-labelledby="example-radio-group-label"
-      class="example-radio-group">
-      <mat-radio-button class="example-radio-button" (change)="mostrarRuta(restaurante?.id, 'WALK')" value="WALK">
+      aria-labelledby="radio-group-label"
+      class="radio-group">
+      <mat-radio-button class="radio-button" (change)="mostrarRuta(restaurante?.id, 'WALK')" value="WALK">
         <span class="information-routes">
           <mat-icon class="walk"> directions_run</mat-icon>
           Pie
         </span>
       </mat-radio-button>
-      <mat-radio-button class="example-radio-button" (change)="mostrarRuta(restaurante?.id, 'DRIVE')" value="DRIVE">
+      <mat-radio-button class="radio-button" (change)="mostrarRuta(restaurante?.id, 'DRIVE')" value="DRIVE">
         <span class="information-routes">
           <mat-icon class="walk">drive_eta</mat-icon>
           Vehículo

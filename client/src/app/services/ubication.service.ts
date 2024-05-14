@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {Turista} from "../../Modelo/turista.interface";
 import {BehaviorSubject} from "rxjs";
 
 @Injectable({
@@ -23,7 +22,6 @@ export class UbicationService {
           resolve();
         },
         () => {
-          console.log('Problemas al obtener la ubicación del dispositivo');
           reject();
         }
       );
