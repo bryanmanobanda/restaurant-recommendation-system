@@ -18,7 +18,8 @@ Application with advanced filtering options
 ![](/images/filter.png)
 Detailed restaurant information
 ![](/images/information.png)
-### 🖥 Installation and Setup Instructions
+
+## 🖥 Installation and Setup Instructions
 ### Prerequisites
 
 Before setting up the application, ensure you have the following:
@@ -28,7 +29,7 @@ Before setting up the application, ensure you have the following:
 - A **Google Cloud API Key** with the new **Places API, Details API** and **Routes API** enabled.
 - An **IBM Natural Language Understanding API Key**.
 
-## Installation
+### Installation
 
 Clone the repository and open the project in your preferred code editor.
 
