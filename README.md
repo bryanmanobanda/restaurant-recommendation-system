@@ -11,7 +11,7 @@ The application was developed using Angular 16, Node.js, Express, Firebase, Goog
 - **Adjustable Search Radius** – Allows users to modify the search radius based on their current location.
 - **Navigation Routes** – Provides **walking and driving directions** from the user’s location to the selected restaurant.
 
-### 📷 Screenshots
+## 📷 Screenshots
 Application with restaurant recommendations and navigation routes
 ![routes and recomendations](/images/routes.png)
 Application with advanced filtering options
@@ -28,7 +28,7 @@ Before setting up the application, ensure you have the following:
 - A **Google Cloud API Key** with the new **Places API, Details API** and **Routes API** enabled.
 - An **IBM Natural Language Understanding API Key**.
 
-### Installation
+## Installation
 
 Clone the repository and open the project in your preferred code editor.
 
